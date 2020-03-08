@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 const Styling = styled.div.attrs({
   className: 'footer-wrapper',
 })`
-  width: 35rem;
+  width: 100%;
   .footer-container {
     display: flex;
     justify-content: space-between;
@@ -84,7 +84,11 @@ export const Footer = ({ page, previous }) => (
               <ul>
                 {[1, 2, 3].map(x => {
                   let active = x === page ? 'active' : ''
-                  return <li className={`${active}`}>{x}</li>
+                  return (
+                    <li key={x} className={`${active}`}>
+                      {x}
+                    </li>
+                  )
                 })}
               </ul>
             </nav>
@@ -93,7 +97,7 @@ export const Footer = ({ page, previous }) => (
       )}
       {page === 1 && (
         <button type="submit" className="button">
-          <FormattedMessage id="button.submit">
+          <FormattedMessage id="button.form">
             {message => message}
           </FormattedMessage>
         </button>

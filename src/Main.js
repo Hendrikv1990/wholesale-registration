@@ -23,18 +23,21 @@ const FormSchema = yup.object().shape({
     .string()
     .matches(phoneRegExp, 'Phone number is not valid')
     .required(),
+  businessName: yup.string().required(),
+  businessAddress: yup.string().required(),
+  postalCode: yup.string().required(),
+  city: yup.string().required(),
+  taxNumber: yup.string().required(),
+  businessType: yup.string().required('Please choose on of the options'),
+  businessRegistration: yup.string().required(),
+  productCategory: yup
+    .array()
+    .of(yup.string().min(2))
+    .required('Choose at least one category'),
 })
 
 const AcknowledgeSchema = yup.object().shape({
-  clientOption: yup.string().required('Please choose on of the options'),
-  companyName: yup.string().when('clientOption', {
-    is: 'pr',
-    then: yup.string().required('Company name is required.'),
-  }),
-  carCollection: yup.string().when('clientOption', {
-    is: 'buyer',
-    then: yup.string().required('Current car collection is required.'),
-  }),
+  gdpr: yup.bool().oneOf([true], 'Must agree to Privacy Policy'),
 })
 
 const Styling = styled.div.attrs({
@@ -132,13 +135,12 @@ class Wizard extends Component {
         <Formik
           initialValues={values}
           validationSchema={this.getValidationSchema(this.state.page)}
-          enableReinitialize={false}
+          enableReinitialize={true}
           validate={this.validate}
           onSubmit={this.handleSubmit}
           render={props => (
             <form onSubmit={props.handleSubmit}>
               {React.cloneElement(activePage, { parentState: { ...props } })}
-              <div className="main-container"></div>
               <Footer previous={this.previous} page={this.state.page} />
               {process.env.NODE_ENV === 'development' && <Debug />}
             </form>
@@ -155,22 +157,17 @@ const Main = ({ campaign, source, medium, targetGroup, postType }) => {
       <div className="main-container">
         <Wizard
           initialValues={{
-            campaign: campaign,
-            source: source,
-            medium: medium,
-            targetGroup: targetGroup,
-            postType,
-            timeStamp: Date(),
             firstName: '',
             lastName: '',
             email: '',
             telephone: '',
-            clientOption: '',
-            carCollection: '',
-            companyName: '',
-            dates: [],
+            businessName: '',
+            businessAddress: '',
+            postalCode: '',
+            city: '',
+            taxNumber: '',
+            businessRegistration: '',
             gdpr: false,
-            newsletter: false,
           }}
         >
           <Wizard.Page>
