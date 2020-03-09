@@ -3,6 +3,8 @@ import { Formik } from 'formik'
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import * as yup from 'yup'
+import { TransitionGroup, Transition } from 'react-transition-group'
+import { Power3, TimelineLite } from 'gsap'
 
 import Debug from './Debug'
 import Acknowledge from './Wizard/Acknowledge'
@@ -55,19 +57,9 @@ const AcknowledgeSchema = yup.object().shape({
 const Styling = styled.div.attrs({
   className: 'wrapper',
 })`
-  .container {
-    span {
-      font-size: 20px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 0.9;
-      letter-spacing: normal;
-    }
-    h1 {
-    }
-    p {
-    }
+  .main-container {
+    position: absolute;
+    width: 100%;
   }
 `
 
@@ -136,6 +128,26 @@ class Wizard extends Component {
     return validationSchemas[page]
   }
 
+  animateOnEnter = node => {
+    const timeline = new TimelineLite()
+    return timeline.to(
+      node,
+      0.5,
+      {
+        ease: Power3.easeInOut,
+        autoAlpha: 1,
+      },
+      '+=0.5',
+    )
+  }
+
+  animateOnExit = node => {
+    const timeline = new TimelineLite()
+    return timeline.to(node, 0.5, {
+      ease: Power3.easeInOut,
+      autoAlpha: 0,
+    })
+  }
   render() {
     const { children } = this.props
     const { page, values } = this.state
@@ -152,7 +164,19 @@ class Wizard extends Component {
           onSubmit={this.handleSubmit}
           render={props => (
             <form onSubmit={props.handleSubmit}>
-              {React.cloneElement(activePage, { parentState: { ...props } })}
+              <TransitionGroup component={null}>
+                <Transition
+                  appear
+                  key={this.state.page}
+                  onEnter={node => this.animateOnEnter(node)}
+                  onExit={node => this.animateOnExit(node)}
+                  timeout={300}
+                >
+                  {React.cloneElement(activePage, {
+                    parentState: { ...props },
+                  })}
+                </Transition>
+              </TransitionGroup>
               <Footer previous={this.previous} page={this.state.page} />
               {process.env.NODE_ENV === 'development' && <Debug />}
             </form>

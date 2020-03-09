@@ -4,7 +4,9 @@ import styled from 'styled-components'
 const Styling = styled.div.attrs({
   className: 'wrapper',
 })`
-  width: 35rem;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
   .container {
     span {
       font-size: 20px;

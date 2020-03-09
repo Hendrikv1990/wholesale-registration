@@ -5,6 +5,8 @@ const Styling = styled.div.attrs({
   className: 'container',
 })`
   display: flex;
+  opacity: 0;
+  visibility: hidden;
   .hero-container {
     flex: 0 1 50%;
     span {
