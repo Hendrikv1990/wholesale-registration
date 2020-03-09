@@ -1,4 +1,5 @@
 import TextField from '@material-ui/core/TextField'
+import { FieldArray } from 'formik'
 import React from 'react'
 import { useIntl } from 'react-intl'
 import Select from 'react-select'
@@ -99,6 +100,45 @@ const productsCategories = [
   },
 ]
 
+const MultiSelect = props => {
+  const {
+    name,
+    label,
+    options,
+    value,
+    error,
+    touched,
+    onBlur,
+    onChange,
+  } = props
+  const handleChange = value => {
+    // this is going to call setFieldValue and manually update values.topcis
+    onChange(name, value)
+  }
+
+  const handleBlur = () => {
+    // this is going to call setFieldTouched and manually update touched.topcis
+    onBlur(name, true)
+  }
+  console.log(error)
+  console.log(touched)
+
+  return (
+    <React.Fragment>
+      <label htmlFor={name}>{label}</label>
+      <Select
+        id={name}
+        options={options}
+        isMulti={true}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={value}
+      />
+      {error && touched && <div className="field-error">{error}</div>}
+    </React.Fragment>
+  )
+}
+
 export const Form = ({
   errors,
   touched,
@@ -159,14 +199,18 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-auto">
             <Select
-              onBlur={() => setFieldTouched('phoneCode', true)}
-              onChange={value => setFieldValue('phoneCode', value)}
-              name="phoneCode"
+              id="dialCode"
+              onBlur={() => setFieldTouched('dialCode', true)}
+              onChange={value => {
+                return setFieldValue('dialCode', value)
+              }}
+              name="dialCode"
               options={dialCodes}
-              getOptionLabel={option => `${option.code}`}
-              getOptionValue={option => option.code}
               value={values.dialCode}
             />
+            {errors.dialCode && touched.dialCode && (
+              <div className="field-error">{errors.dialCode.value}</div>
+            )}
           </div>
           <div className="field-wrapper width-100">
             <TextField
@@ -270,11 +314,16 @@ export const Form = ({
             <Select
               id="businessType"
               onBlur={() => setFieldTouched('businessType', true)}
-              onChange={value => setFieldValue('businessType', value.name)}
+              onChange={value => {
+                return setFieldValue('businessType', value)
+              }}
               name="businessType"
               options={businessTypes}
               value={values.businessType}
             />
+            {errors.businessType && touched.businessType && (
+              <div className="field-error">{errors.businessType.value}</div>
+            )}
           </div>
         </div>
         <div className="row-container">
@@ -301,14 +350,14 @@ export const Form = ({
 
         <div className="row-container">
           <div className="field-wrapper width-100">
-            <Select
-              id="productCategory"
-              onBlur={() => setFieldTouched('productCategory', true)}
-              onChange={value => setFieldValue('productCategory', value.name)}
-              name="productCategory"
-              options={productsCategories}
-              isMulti={true}
+            <MultiSelect
+              name="productCategories"
               value={values.productCategories}
+              onChange={setFieldValue}
+              onBlur={setFieldTouched}
+              error={errors.productCategories}
+              touched={touched.productCategories}
+              options={productsCategories}
             />
           </div>
         </div>

@@ -28,12 +28,24 @@ const FormSchema = yup.object().shape({
   postalCode: yup.string().required(),
   city: yup.string().required(),
   taxNumber: yup.string().required(),
-  businessType: yup.string().required('Please choose on of the options'),
+  dialCode: yup.object().shape({
+    label: yup.string().required(),
+    value: yup.string().required('Please choose on of the options'),
+  }),
+  businessType: yup.object().shape({
+    label: yup.string().required(),
+    value: yup.string().required('Please choose on of the options'),
+  }),
   businessRegistration: yup.string().required(),
-  productCategory: yup
+  productCategories: yup
     .array()
-    .of(yup.string().min(2))
-    .required('Choose at least one category'),
+    .min(1, 'Pick at least 1 category')
+    .of(
+      yup.object().shape({
+        label: yup.string().required(),
+        value: yup.string().required(),
+      }),
+    ),
 })
 
 const AcknowledgeSchema = yup.object().shape({
@@ -135,7 +147,7 @@ class Wizard extends Component {
         <Formik
           initialValues={values}
           validationSchema={this.getValidationSchema(this.state.page)}
-          enableReinitialize={true}
+          enableReinitialize={false}
           validate={this.validate}
           onSubmit={this.handleSubmit}
           render={props => (
@@ -160,14 +172,16 @@ const Main = ({ campaign, source, medium, targetGroup, postType }) => {
             firstName: '',
             lastName: '',
             email: '',
+            dialCode: {},
             telephone: '',
             businessName: '',
             businessAddress: '',
             postalCode: '',
             city: '',
             taxNumber: '',
-            businessRegistration: '',
             gdpr: false,
+            productCategories: [],
+            businessType: {},
           }}
         >
           <Wizard.Page>
