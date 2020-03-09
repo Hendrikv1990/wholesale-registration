@@ -151,7 +151,7 @@ class Wizard extends Component {
 
   animateOnExit = node => {
     const timeline = new TimelineLite()
-    return timeline.set(node, {
+    return timeline.to(node, 0.5, {
       ease: Power3.easeInOut,
       autoAlpha: 0,
     })
