@@ -15,10 +15,6 @@ const Styling = styled.div.attrs({
       line-height: 0.9;
       letter-spacing: normal;
     }
-    h1 {
-    }
-    p {
-    }
   }
   .image-wrapper {
     flex: 0 1 50%;

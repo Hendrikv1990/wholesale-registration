@@ -1,17 +1,18 @@
 import axios from 'axios'
 import { Formik } from 'formik'
+import { Power3, TimelineLite } from 'gsap'
+import debounce from 'lodash.debounce'
 import React, { Component } from 'react'
+import { Transition, TransitionGroup } from 'react-transition-group'
 import styled from 'styled-components'
 import * as yup from 'yup'
-import { TransitionGroup, Transition } from 'react-transition-group'
-import { Power3, TimelineLite } from 'gsap'
-
-import Debug from './Debug'
+import Footer from './Footer'
+// import Debug from './Debug'
 import Acknowledge from './Wizard/Acknowledge'
 import Finish from './Wizard/Finish'
 import Form from './Wizard/Form'
 import Start from './Wizard/Start'
-import Footer from './Footer'
+
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const FormSchema = yup.object().shape({
@@ -59,14 +60,15 @@ const Styling = styled.div.attrs({
 })`
   .main-wrapper {
     position: relative;
+    height: ${props => props.mainHeight}px;
     .main-container {
       width: 100%;
       position: absolute;
     }
   }
   .footer-wrapper {
-    position: absolute;
-    bottom: 0;
+    /* position: absolute;
+    bottom: 0; */
     width: 100%;
   }
 `
@@ -78,11 +80,37 @@ class Wizard extends Component {
 
   constructor(props) {
     super(props)
+    this.mainRef = React.createRef()
     this.state = {
       message: null,
       page: 0,
       values: props.initialValues,
+      dimensions: {
+        width: 0,
+        height: 0,
+      },
     }
+  }
+
+  onResizeDebounced = debounce(() => {
+    if (this.mainRef.current != null) {
+      this.setState({
+        dimensions: {
+          height: this.mainRef.current.clientHeight,
+        },
+      })
+    }
+  }, 400)
+
+  onResize = () => {
+    return this.onResizeDebounced()
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+    this.onResize()
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
   }
 
   next = values =>
@@ -163,7 +191,7 @@ class Wizard extends Component {
 
     const isLastPage = page === React.Children.count(children) - 1
     return (
-      <React.Fragment>
+      <Styling mainHeight={this.state.dimensions.height}>
         <Formik
           initialValues={values}
           validationSchema={this.getValidationSchema(this.state.page)}
@@ -176,13 +204,14 @@ class Wizard extends Component {
                 <TransitionGroup component={null}>
                   <Transition
                     appear
+                    onEntered={this.onResize()}
                     key={this.state.page}
                     onEnter={node => this.animateOnEnter(node)}
                     onExit={node => this.animateOnExit(node)}
                     timeout={500}
                     unmountOnExit
                   >
-                    <div className="main-container">
+                    <div className="main-container" ref={this.mainRef}>
                       {React.cloneElement(activePage, {
                         parentState: { ...props },
                       })}
@@ -197,14 +226,14 @@ class Wizard extends Component {
             </form>
           )}
         />
-      </React.Fragment>
+      </Styling>
     )
   }
 }
 
 const Main = ({ campaign, source, medium, targetGroup, postType }) => {
   return (
-    <Styling>
+    <React.Fragment>
       <Wizard
         initialValues={{
           firstName: 'ΜΑΡΙΝΟΣ',
@@ -275,7 +304,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType }) => {
           }}
         </Wizard.Page>
       </Wizard>
-    </Styling>
+    </React.Fragment>
   )
 }
 
