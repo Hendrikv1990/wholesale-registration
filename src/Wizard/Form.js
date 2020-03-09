@@ -9,8 +9,6 @@ import { dialCodes } from '../constants'
 const Styling = styled.div.attrs({
   className: 'form-container',
 })`
-  opacity: 0;
-  visibility: hidden;
   display: flex;
   width: 100%;
   .row-container {

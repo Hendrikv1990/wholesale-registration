@@ -57,8 +57,16 @@ const AcknowledgeSchema = yup.object().shape({
 const Styling = styled.div.attrs({
   className: 'wrapper',
 })`
-  .main-container {
+  .main-wrapper {
+    position: relative;
+    .main-container {
+      width: 100%;
+      position: absolute;
+    }
+  }
+  .footer-wrapper {
     position: absolute;
+    bottom: 0;
     width: 100%;
   }
 `
@@ -130,12 +138,12 @@ class Wizard extends Component {
 
   animateOnEnter = node => {
     const timeline = new TimelineLite()
-    return timeline.to(
+    return timeline.from(
       node,
       0.5,
       {
         ease: Power3.easeInOut,
-        autoAlpha: 1,
+        autoAlpha: 0,
       },
       '+=0.5',
     )
@@ -143,7 +151,7 @@ class Wizard extends Component {
 
   animateOnExit = node => {
     const timeline = new TimelineLite()
-    return timeline.to(node, 0.5, {
+    return timeline.set(node, {
       ease: Power3.easeInOut,
       autoAlpha: 0,
     })
@@ -164,21 +172,28 @@ class Wizard extends Component {
           onSubmit={this.handleSubmit}
           render={props => (
             <form onSubmit={props.handleSubmit}>
-              <TransitionGroup component={null}>
-                <Transition
-                  appear
-                  key={this.state.page}
-                  onEnter={node => this.animateOnEnter(node)}
-                  onExit={node => this.animateOnExit(node)}
-                  timeout={300}
-                >
-                  {React.cloneElement(activePage, {
-                    parentState: { ...props },
-                  })}
-                </Transition>
-              </TransitionGroup>
-              <Footer previous={this.previous} page={this.state.page} />
-              {process.env.NODE_ENV === 'development' && <Debug />}
+              <div className="main-wrapper">
+                <TransitionGroup component={null}>
+                  <Transition
+                    appear
+                    key={this.state.page}
+                    onEnter={node => this.animateOnEnter(node)}
+                    onExit={node => this.animateOnExit(node)}
+                    timeout={500}
+                    unmountOnExit
+                  >
+                    <div className="main-container">
+                      {React.cloneElement(activePage, {
+                        parentState: { ...props },
+                      })}
+                    </div>
+                  </Transition>
+                </TransitionGroup>
+              </div>
+              <div className="footer-wrapper">
+                <Footer previous={this.previous} page={this.state.page} />
+              </div>
+              {/* {process.env.NODE_ENV === 'development' && <Debug />} */}
             </form>
           )}
         />
@@ -190,78 +205,76 @@ class Wizard extends Component {
 const Main = ({ campaign, source, medium, targetGroup, postType }) => {
   return (
     <Styling>
-      <div className="main-container">
-        <Wizard
-          initialValues={{
-            firstName: 'ΜΑΡΙΝΟΣ',
-            lastName: 'Ζακυνθινος',
-            email: 'marinoszak@gmail.com',
-            dialCode: {
-              value: '+213',
-              label: 'Algeria',
+      <Wizard
+        initialValues={{
+          firstName: 'ΜΑΡΙΝΟΣ',
+          lastName: 'Ζακυνθινος',
+          email: 'marinoszak@gmail.com',
+          dialCode: {
+            value: '+213',
+            label: 'Algeria',
+          },
+          telephone: '234234234',
+          businessName: 'asdf',
+          businessAddress: 'Καρυα Λευκαδας',
+          postalCode: '31080',
+          city: 'Καρυα',
+          taxNumber: '234',
+          gdpr: false,
+          productCategories: [
+            {
+              value: 'category_2',
+              label: 'category_2',
             },
-            telephone: '234234234',
-            businessName: 'asdf',
-            businessAddress: 'Καρυα Λευκαδας',
-            postalCode: '31080',
-            city: 'Καρυα',
-            taxNumber: '234',
-            gdpr: false,
-            productCategories: [
-              {
-                value: 'category_2',
-                label: 'category_2',
-              },
-              {
-                value: 'category_1',
-                label: 'category_1',
-              },
-            ],
-            businessType: {
-              value: 'Einzelkaufleute',
-              label: 'Einzelkaufleute',
+            {
+              value: 'category_1',
+              label: 'category_1',
             },
-            businessRegistration: 'asdfsdf',
-            // firstName: '',
-            // lastName: '',
-            // email: '',
-            // dialCode: {},
-            // telephone: '',
-            // businessName: '',
-            // businessAddress: '',
-            // postalCode: '',
-            // city: '',
-            // taxNumber: '',
-            // gdpr: false,
-            // productCategories: [],
-            // businessType: {},
+          ],
+          businessType: {
+            value: 'Einzelkaufleute',
+            label: 'Einzelkaufleute',
+          },
+          businessRegistration: 'asdfsdf',
+          // firstName: '',
+          // lastName: '',
+          // email: '',
+          // dialCode: {},
+          // telephone: '',
+          // businessName: '',
+          // businessAddress: '',
+          // postalCode: '',
+          // city: '',
+          // taxNumber: '',
+          // gdpr: false,
+          // productCategories: [],
+          // businessType: {},
+        }}
+      >
+        <Wizard.Page>
+          {props => {
+            return <Start {...props}></Start>
           }}
-        >
-          <Wizard.Page>
-            {props => {
-              return <Start {...props}></Start>
-            }}
-          </Wizard.Page>
+        </Wizard.Page>
 
-          <Wizard.Page>
-            {props => {
-              return <Form {...props}></Form>
-            }}
-          </Wizard.Page>
+        <Wizard.Page>
+          {props => {
+            return <Form {...props}></Form>
+          }}
+        </Wizard.Page>
 
-          <Wizard.Page>
-            {props => {
-              return <Acknowledge {...props}></Acknowledge>
-            }}
-          </Wizard.Page>
+        <Wizard.Page>
+          {props => {
+            return <Acknowledge {...props}></Acknowledge>
+          }}
+        </Wizard.Page>
 
-          <Wizard.Page>
-            {props => {
-              return <Finish {...props}></Finish>
-            }}
-          </Wizard.Page>
-        </Wizard>
-      </div>
+        <Wizard.Page>
+          {props => {
+            return <Finish {...props}></Finish>
+          }}
+        </Wizard.Page>
+      </Wizard>
     </Styling>
   )
 }

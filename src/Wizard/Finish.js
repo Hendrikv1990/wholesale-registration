@@ -4,22 +4,8 @@ import styled from 'styled-components'
 const Styling = styled.div.attrs({
   className: 'wrapper',
 })`
-  opacity: 0;
-  visibility: hidden;
   width: 100%;
   .container {
-    span {
-      font-size: 20px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 0.9;
-      letter-spacing: normal;
-    }
-    h1 {
-    }
-    p {
-    }
   }
 `
 

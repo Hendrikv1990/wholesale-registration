@@ -2,11 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Styling = styled.div.attrs({
-  className: 'container',
+  className: 'start-container',
 })`
   display: flex;
-  opacity: 0;
-  visibility: hidden;
   .hero-container {
     flex: 0 1 50%;
     span {
