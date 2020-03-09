@@ -120,9 +120,6 @@ const MultiSelect = props => {
     // this is going to call setFieldTouched and manually update touched.topcis
     onBlur(name, true)
   }
-  console.log(error)
-  console.log(touched)
-
   return (
     <React.Fragment>
       <label htmlFor={name}>{label}</label>

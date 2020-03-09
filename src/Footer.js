@@ -95,7 +95,7 @@ export const Footer = ({ page, previous }) => (
           </div>
         </div>
       )}
-      {page === 1 && (
+      {(page === 1 || page === 2) && (
         <button type="submit" className="button">
           <FormattedMessage id="button.form">
             {message => message}

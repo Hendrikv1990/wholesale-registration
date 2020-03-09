@@ -169,19 +169,48 @@ const Main = ({ campaign, source, medium, targetGroup, postType }) => {
       <div className="main-container">
         <Wizard
           initialValues={{
-            firstName: '',
-            lastName: '',
-            email: '',
-            dialCode: {},
-            telephone: '',
-            businessName: '',
-            businessAddress: '',
-            postalCode: '',
-            city: '',
-            taxNumber: '',
+            firstName: 'ΜΑΡΙΝΟΣ',
+            lastName: 'Ζακυνθινος',
+            email: 'marinoszak@gmail.com',
+            dialCode: {
+              value: '+213',
+              label: 'Algeria',
+            },
+            telephone: '234234234',
+            businessName: 'asdf',
+            businessAddress: 'Καρυα Λευκαδας',
+            postalCode: '31080',
+            city: 'Καρυα',
+            taxNumber: '234',
             gdpr: false,
-            productCategories: [],
-            businessType: {},
+            productCategories: [
+              {
+                value: 'category_2',
+                label: 'category_2',
+              },
+              {
+                value: 'category_1',
+                label: 'category_1',
+              },
+            ],
+            businessType: {
+              value: 'Einzelkaufleute',
+              label: 'Einzelkaufleute',
+            },
+            businessRegistration: 'asdfsdf',
+            // firstName: '',
+            // lastName: '',
+            // email: '',
+            // dialCode: {},
+            // telephone: '',
+            // businessName: '',
+            // businessAddress: '',
+            // postalCode: '',
+            // city: '',
+            // taxNumber: '',
+            // gdpr: false,
+            // productCategories: [],
+            // businessType: {},
           }}
         >
           <Wizard.Page>
