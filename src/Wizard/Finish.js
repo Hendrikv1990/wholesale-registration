@@ -1,29 +1,86 @@
 import React from 'react'
 import styled from 'styled-components'
+import Checkbox from '@material-ui/core/Checkbox'
+import { FormattedMessage } from 'react-intl'
 
 const Styling = styled.div.attrs({
-  className: 'wrapper',
+  className: 'ack-container',
 })`
+  display: flex;
   width: 100%;
+  .row-container {
+    display: flex;
+  }
+  .column-container {
+    flex: 0 1 50%;
+  }
+  .field-wrapper {
+    margin: 1rem;
+  }
+  .width-50 {
+    flex: 0 1 50%;
+  }
+  .width-100 {
+    flex: 0 1 100%;
+  }
+  .width-auto {
+    flex: 0 1 auto;
+  }
+
   .container {
+    span {
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 0.9;
+      letter-spacing: normal;
+    }
+    h1 {
+    }
+    p {
+    }
   }
 `
 
-export const Start = props => {
+export const Finish = ({
+  errors,
+  touched,
+  handleChange,
+  handleBlur,
+  values,
+}) => {
   return (
     <Styling>
-      <div className="container">
-        <span>Händlersuche</span>
-        <h1>Lorem ipsum dolor sit amet.</h1>
-        <p className="lead">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-          nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat.
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-          nonummy nibh euismod tincidunt ut laoreet dolore magna.
-        </p>
+      <div className="column-container">
+        <div className="row-container">
+          <h1>
+            <FormattedMessage id="finish.h1">
+              {message => message}
+            </FormattedMessage>
+          </h1>
+        </div>
+        <div className="row-container">
+          <p className="lead">
+            <FormattedMessage id="finish.p">
+              {message => message}
+            </FormattedMessage>
+          </p>
+        </div>
+        <div className="row-container"></div>
+      </div>
+      <div className="column-container">
+        <div className="row-container">
+          <div className="width-50">
+            <FormattedMessage id="finish.firstName">
+              {message => message}
+            </FormattedMessage>
+          </div>
+          <div className="width-50">{values.firstName}</div>
+        </div>
       </div>
     </Styling>
   )
 }
 
-export default Start
+export default Finish

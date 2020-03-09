@@ -23,6 +23,13 @@ export default {
       gdbr:
         'Ich bin damit einverstanden, dass meine Daten für die oben genannten Zwecke gespeichert und genutzt werden.',
     },
+    finish: {
+      h1: 'DANKE FÜR DEINE REGISTRIERUNG!',
+      p:
+        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna.',
+      gdbr:
+        'Ich bin damit einverstanden, dass meine Daten für die oben genannten Zwecke gespeichert und genutzt werden.',
+    },
     button: {
       start: 'Start',
       form: 'Next',
