@@ -1,7 +1,7 @@
 import React from 'react'
-import styled from 'styled-components'
-import Checkbox from '@material-ui/core/Checkbox'
 import { FormattedMessage } from 'react-intl'
+import styled from 'styled-components'
+import { device } from '../assets/Styles'
 
 const Styling = styled.div.attrs({
   className: 'ack-container',
@@ -13,6 +13,9 @@ const Styling = styled.div.attrs({
   }
   .column-container {
     flex: 0 1 50%;
+    @media ${device.tablet} {
+      flex: 0 1 100%;
+    }
   }
   .field-wrapper {
     margin: 1rem;

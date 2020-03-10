@@ -10,6 +10,7 @@ const Styling = styled.div.attrs({
   width: 100%;
   .row-container {
     display: flex;
+    width: 100%;
   }
   .column-container {
     flex: 0 1 50%;

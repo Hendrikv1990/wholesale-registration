@@ -22,7 +22,7 @@ export const GlobalStyle = createGlobalStyle`
     color: #222;
     letter-spacing: 0.2px;
      text-rendering: optimizeLegibility;
-     @media ${device.tablet} {}
+     
   }
 
   h1 {

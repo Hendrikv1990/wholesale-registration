@@ -1,21 +1,41 @@
 import TextField from '@material-ui/core/TextField'
-import { FieldArray } from 'formik'
 import React from 'react'
-import { useIntl } from 'react-intl'
+import { useIntl, FormattedMessage } from 'react-intl'
 import Select from 'react-select'
 import styled from 'styled-components'
 import { dialCodes } from '../constants'
+import { device } from '../assets/Styles'
 
 const Styling = styled.div.attrs({
   className: 'form-container',
 })`
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
+  .react-select__control {
+    border-style: none;
+    border-radius: 0;
+    border-bottom: 1px solid;
+    box-shadow: none;
+    .react-select__indicators {
+      span {
+        display: none;
+      }
+    }
+    &:hover {
+      border: none;
+      border-bottom: 2px solid;
+    }
+  }
   .row-container {
     display: flex;
+    width: 100%;
   }
   .column-container {
     flex: 0 1 50%;
+    @media ${device.tablet} {
+      flex: 0 1 100%;
+    }
   }
   .field-wrapper {
     margin: 1rem;
@@ -28,6 +48,12 @@ const Styling = styled.div.attrs({
   }
   .width-auto {
     flex: 0 1 auto;
+  }
+  .width-30 {
+    flex: 0 1 30%;
+  }
+  .width-70 {
+    flex: 0 1 70%;
   }
 
   .container {
@@ -110,6 +136,7 @@ const MultiSelect = props => {
     touched,
     onBlur,
     onChange,
+    placeholder,
   } = props
   const handleChange = value => {
     // this is going to call setFieldValue and manually update values.topcis
@@ -130,6 +157,8 @@ const MultiSelect = props => {
         onChange={handleChange}
         onBlur={handleBlur}
         value={value}
+        classNamePrefix="react-select"
+        placeholder={placeholder}
       />
       {error && touched && <div className="field-error">{error}</div>}
     </React.Fragment>
@@ -148,6 +177,11 @@ export const Form = ({
   const intl = useIntl()
   return (
     <Styling>
+      <div className="row-container">
+        <h1>
+          <FormattedMessage id="form.h1">{message => message}</FormattedMessage>
+        </h1>
+      </div>
       <div className="column-container">
         <div className="row-container">
           <div className="field-wrapper width-50">
@@ -194,7 +228,7 @@ export const Form = ({
           </div>
         </div>
         <div className="row-container">
-          <div className="field-wrapper width-auto">
+          <div className="field-wrapper width-30">
             <Select
               id="dialCode"
               onBlur={() => setFieldTouched('dialCode', true)}
@@ -203,13 +237,16 @@ export const Form = ({
               }}
               name="dialCode"
               options={dialCodes}
+              getOptionLabel={option => option.value}
+              getOptionValue={option => option.value}
               value={values.dialCode}
+              classNamePrefix="react-select"
             />
             {errors.dialCode && touched.dialCode && (
               <div className="field-error">{errors.dialCode.value}</div>
             )}
           </div>
-          <div className="field-wrapper width-100">
+          <div className="field-wrapper width-70">
             <TextField
               fullWidth
               name="telephone"
@@ -317,6 +354,8 @@ export const Form = ({
               name="businessType"
               options={businessTypes}
               value={values.businessType}
+              classNamePrefix="react-select"
+              placeholder={intl.messages['form.businessType']}
             />
             {errors.businessType && touched.businessType && (
               <div className="field-error">{errors.businessType.value}</div>
@@ -355,6 +394,8 @@ export const Form = ({
               error={errors.productCategories}
               touched={touched.productCategories}
               options={productsCategories}
+              classNamePrefix="react-select"
+              placeholder={intl.messages['form.productCategories']}
             />
           </div>
         </div>

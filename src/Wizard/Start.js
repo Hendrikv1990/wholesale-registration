@@ -1,12 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
+import { device } from '../assets/Styles'
 
 const Styling = styled.div.attrs({
   className: 'start-container',
 })`
   display: flex;
+  @media ${device.phone} {
+    display: block;
+  }
   .hero-container {
     flex: 0 1 50%;
+
     span {
       font-size: 20px;
       font-weight: normal;

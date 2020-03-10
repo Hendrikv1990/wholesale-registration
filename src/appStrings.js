@@ -1,6 +1,7 @@
 export default {
   en: {
     form: {
+      h1: 'Daten',
       firstName: 'First Name',
       lastName: 'Last Name',
       email: 'Email',

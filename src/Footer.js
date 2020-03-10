@@ -1,15 +1,33 @@
 import React from 'react'
-import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
+import styled from 'styled-components'
+import { device, sizes } from './assets/Styles'
 
 const Styling = styled.div.attrs({
-  className: 'footer-container',
+  className: 'footer-wrapper',
 })`
+  .footer-container {
+  }
+  .hidden {
+    visibility: hidden;
+  }
   width: 100%;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  .item {
+    div {
+      display: inline-block;
+    }
+    @media ${device.phone} {
+      display: flex;
+      justify-content: center;
+      flex: 0 1 100%;
+      margin-top: 1rem;
+    }
+  }
+
   .button {
     color: #222;
     background: white;
@@ -36,6 +54,9 @@ const Styling = styled.div.attrs({
           flex-wrap: wrap;
           list-style: none;
           align-items: center;
+          @media ${device.phone} {
+            justify-content: center;
+          }
           li {
             height: 32px;
             margin: 0 3px;
@@ -52,55 +73,63 @@ const Styling = styled.div.attrs({
         }
       }
     }
-    h1 {
-    }
-    p {
-    }
   }
 `
 
-export const Footer = ({ page, previous }) => (
-  <Styling>
-    {page === 0 && (
-      <button className="button">
-        <FormattedMessage id="button.start">
-          {message => message}
-        </FormattedMessage>
-      </button>
-    )}
-    {page === 2 && (
-      <button onClick={previous} className="button">
-        <FormattedMessage id="button.back">
-          {message => message}
-        </FormattedMessage>
-      </button>
-    )}
-    {page > 0 && page < 4 && (
-      <div className="pagination-wrapper">
-        <div className="pagination-container">
-          <nav>
-            <ul>
-              {[1, 2, 3].map(x => {
-                let active = x === page ? 'active' : ''
-                return (
-                  <li key={x} className={`${active}`}>
-                    {x}
-                  </li>
-                )
-              })}
-            </ul>
-          </nav>
+export const Footer = ({ page, previous, width }) => {
+  const Pagination = () => {
+    return (
+      <div className="item">
+        <div className="pagination-wrapper">
+          <div className="pagination-container">
+            <nav>
+              <ul>
+                {[1, 2, 3].map(x => {
+                  let active = x === page ? 'active' : ''
+                  return (
+                    <li key={x} className={`${active}`}>
+                      {x}
+                    </li>
+                  )
+                })}
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
-    )}
-    {(page === 1 || page === 2) && (
-      <button type="submit" className="button">
-        <FormattedMessage id="button.form">
-          {message => message}
-        </FormattedMessage>
-      </button>
-    )}
-  </Styling>
-)
+    )
+  }
 
+  const SubmitButton = ({ name }) => {
+    return (
+      <div className="item">
+        <button type="submit" className="button">
+          <FormattedMessage id={name}>{message => message}</FormattedMessage>
+        </button>
+      </div>
+    )
+  }
+
+  const SimpleButton = ({ name, className }) => {
+    return (
+      <div className={`item ${className}`}>
+        <button onClick={previous} className="button">
+          <FormattedMessage id={name}>{message => message}</FormattedMessage>
+        </button>
+      </div>
+    )
+  }
+  return (
+    <Styling>
+      {/* We show this hidden component on Desktop and Tablet only */}
+      {page === 1 && width > sizes.phone && (
+        <SimpleButton className="hidden" name="button.start" />
+      )}
+      {page === 0 && <SubmitButton name="button.start" />}
+      {page === 2 && <SimpleButton name="button.back" />}
+      {page > 0 && page < 4 && <Pagination />}
+      {(page === 1 || page === 2) && <SubmitButton name="button.form" />}
+    </Styling>
+  )
+}
 export default Footer

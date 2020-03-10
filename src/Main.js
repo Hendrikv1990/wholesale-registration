@@ -46,6 +46,7 @@ const FormSchema = yup.object().shape({
   productCategories: yup
     .array()
     .min(1, 'Pick at least 1 category')
+    .nullable()
     .of(
       yup.object().shape({
         label: yup.string().required(),
@@ -223,9 +224,11 @@ class Wizard extends Component {
                   </Transition>
                 </TransitionGroup>
               </div>
-              <div className="footer-wrapper">
-                <Footer previous={this.previous} page={this.state.page} />
-              </div>
+              <Footer
+                width={this.state.dimensions.width}
+                previous={this.previous}
+                page={this.state.page}
+              />
               {/* {process.env.NODE_ENV === 'development' && <Debug />} */}
             </form>
           )}
