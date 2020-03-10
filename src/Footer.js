@@ -113,7 +113,7 @@ export const Footer = ({ page, previous, width }) => {
   const SimpleButton = ({ name, className }) => {
     return (
       <div className={`item ${className}`}>
-        <button onClick={previous} className="button">
+        <button type="button" onClick={previous} className="button">
           <FormattedMessage id={name}>{message => message}</FormattedMessage>
         </button>
       </div>

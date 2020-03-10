@@ -220,15 +220,16 @@ class Wizard extends Component {
                       {React.cloneElement(activePage, {
                         parentState: { ...props },
                       })}
+                      <Footer
+                        width={this.state.dimensions.width}
+                        previous={this.previous}
+                        page={page}
+                      />
                     </div>
                   </Transition>
                 </TransitionGroup>
               </div>
-              <Footer
-                width={this.state.dimensions.width}
-                previous={this.previous}
-                page={this.state.page}
-              />
+
               {/* {process.env.NODE_ENV === 'development' && <Debug />} */}
             </form>
           )}
