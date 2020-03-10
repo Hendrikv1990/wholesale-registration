@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Formik } from 'formik'
-import { Power3, TimelineLite } from 'gsap'
+import { gsap, Power3, TimelineLite } from 'gsap'
+import { CSSPlugin } from 'gsap/CSSPlugin'
 import debounce from 'lodash.debounce'
 import React, { Component } from 'react'
 import { Transition, TransitionGroup } from 'react-transition-group'
@@ -12,6 +13,8 @@ import Acknowledge from './Wizard/Acknowledge'
 import Finish from './Wizard/Finish'
 import Form from './Wizard/Form'
 import Start from './Wizard/Start'
+
+gsap.registerPlugin(CSSPlugin)
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
@@ -97,6 +100,7 @@ class Wizard extends Component {
       this.setState({
         dimensions: {
           height: this.mainRef.current.clientHeight,
+          width: this.mainRef.current.clientWidth,
         },
       })
     }
