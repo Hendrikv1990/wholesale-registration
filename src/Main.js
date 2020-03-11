@@ -8,7 +8,7 @@ import { Transition, TransitionGroup } from 'react-transition-group'
 import styled from 'styled-components'
 import * as yup from 'yup'
 import Footer from './Footer'
-// import Debug from './Debug'
+import Debug from './Debug'
 import Acknowledge from './Wizard/Acknowledge'
 import Finish from './Wizard/Finish'
 import Form from './Wizard/Form'
@@ -44,9 +44,10 @@ const FormSchema = yup.object().shape({
   }),
   businessRegistration: yup.string().required(),
   productCategories: yup
+
     .array()
-    .min(1, 'Pick at least 1 category')
     .nullable()
+    .min(1, 'Pick at least 1 category')
     .of(
       yup.object().shape({
         label: yup.string().required(),
@@ -230,7 +231,7 @@ class Wizard extends Component {
                 </TransitionGroup>
               </div>
 
-              {/* {process.env.NODE_ENV === 'development' && <Debug />} */}
+              {process.env.NODE_ENV === 'development' && <Debug />}
             </form>
           )}
         />
