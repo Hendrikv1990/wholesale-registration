@@ -1,10 +1,11 @@
 import TextField from '@material-ui/core/TextField'
-import React from 'react'
-import { useIntl, FormattedMessage } from 'react-intl'
+import React, { useEffect, useRef } from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
 import Select from 'react-select'
 import styled from 'styled-components'
-import { dialCodes } from '../constants'
 import { device } from '../assets/Styles'
+import { dialCodes } from '../constants'
+import { useDispatch, useStore } from 'react-redux'
 
 const Styling = styled.div.attrs({
   className: 'form-container',
@@ -165,6 +166,130 @@ const MultiSelect = props => {
   )
 }
 
+const UploadField = props => {
+  const dispatch = useDispatch()
+  const store = useStore()
+  const state = store.getState()
+
+  const api = {
+    uploadFile({ timeout = 550 }) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve()
+        }, timeout)
+      })
+    },
+  }
+
+  const logUploadedFile = (num, color = 'green') => {
+    const msg = `%cUploaded ${num} files.`
+    const style = `color:${color};font-weight:bold;`
+    console.log(msg, style)
+  }
+
+  // Sets the next file when it detects that its ready to go
+  useEffect(() => {
+    if (state.pending.length && state.next == null) {
+      const next = state.pending[0]
+      dispatch({ type: 'next', next })
+    }
+  }, [state.next, state.pending])
+
+  const countRef = useRef(0)
+
+  // Processes the next pending doc when ready
+  useEffect(() => {
+    if (state.pending.length && state.next) {
+      const { next } = state
+      api
+        .uploadFile(next)
+        .then(() => {
+          const prev = next
+          logUploadedFile(++countRef.current)
+          const pending = state.pending.slice(1)
+          dispatch({
+            type: 'file-uploaded',
+            prev,
+            pending,
+          })
+        })
+        .catch(error => {
+          console.error(error)
+          dispatch({
+            type: 'set-upload-error',
+            error,
+          })
+        })
+    }
+  }, [state])
+
+  // Ends the upload process
+  useEffect(() => {
+    if (!state.pending.length && state.uploading) {
+      dispatch({ type: 'files-uploaded' })
+    }
+  }, [state.pending.length, state.uploading])
+
+  const onChangeFiles = e => {
+    if (e.target.files.length) {
+      const arrFiles = Array.from(e.target.files)
+      const files = arrFiles.map((file, index) => {
+        const src = window.URL.createObjectURL(file)
+        return { file, id: index, src }
+      })
+      dispatch({ type: 'load', files })
+    }
+  }
+
+  const Input = props => (
+    <input
+      type="file"
+      accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+      name="doc-loader-input"
+      multiple
+      {...props}
+    />
+  )
+
+  return (
+    <React.Fragment>
+      <div className="container">
+        <div>
+          <Input onChange={onChangeFiles} />
+        </div>
+        <div>
+          {state.files.map(({ file, src, id }, index) => (
+            <div
+              style={{
+                opacity: state.uploaded[id] ? 0.2 : 1,
+              }}
+              key={`doc-${index}`}
+              className="doc-wrapper"
+            >
+              <div className="doc-caption">{file.name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {state.status === 'FILES_UPLOADED' && (
+        <div className="success-container">
+          <div>
+            <h2>
+              <FormattedMessage id="form.files.uploaded.h1">
+                {message => message}
+              </FormattedMessage>
+            </h2>
+            <p>
+              <FormattedMessage id="form.files.uploaded.p">
+                {message => message}
+              </FormattedMessage>
+            </p>
+          </div>
+        </div>
+      )}
+    </React.Fragment>
+  )
+}
 export const Form = ({
   errors,
   touched,
@@ -175,6 +300,7 @@ export const Form = ({
   setFieldValue,
 }) => {
   const intl = useIntl()
+
   return (
     <Styling>
       <div className="row-container">
@@ -364,23 +490,7 @@ export const Form = ({
         </div>
         <div className="row-container">
           <div className="field-wrapper width-100">
-            <TextField
-              fullWidth
-              name="businessRegistration"
-              helperText={
-                errors.businessRegistration &&
-                touched.businessRegistration &&
-                errors.businessRegistration
-              }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={
-                touched.businessRegistration &&
-                Boolean(errors.businessRegistration)
-              }
-              label={intl.messages['form.businessRegistration']}
-              value={values.businessRegistration}
-            />
+            <UploadField />
           </div>
         </div>
 
