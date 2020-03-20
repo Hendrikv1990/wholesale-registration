@@ -5,7 +5,8 @@ import Select from 'react-select'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
-import { useDispatch, useStore } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import AWS from 'aws-sdk'
 
 const Styling = styled.div.attrs({
   className: 'form-container',
@@ -168,15 +169,52 @@ const MultiSelect = props => {
 
 const UploadField = props => {
   const dispatch = useDispatch()
-  const store = useStore()
-  const state = store.getState()
+  const pending = useSelector(state => state.pending)
+  const next = useSelector(state => state.next)
+  const state = useSelector(state => state)
+  const uploading = useSelector(state => state.uploading)
 
   const api = {
-    uploadFile({ timeout = 550 }) {
+    uploadFile(file) {
       return new Promise(resolve => {
-        setTimeout(() => {
-          resolve()
-        }, timeout)
+        const spacesEndpoint = new AWS.Endpoint('fra1.digitaloceanspaces.com')
+        const s3 = new AWS.S3({
+          endpoint: spacesEndpoint,
+          accessKeyId: 'TX4ZNJLCNGOGQMGZLA5D',
+          secretAccessKey:
+            'TX4ZNJ7/4ar5zPzYz65FN5TF3JZI51yAEVKtGnWw5MUG2NWXYLCNGOGQMGZLA5D',
+        })
+
+        console.log(file)
+
+        const blob = file.file
+        const params = { Body: blob, Bucket: 'tomhemps', Key: blob.name }
+        s3.putObject(params)
+          .on('build', request => {
+            request.httpRequest.headers.Host =
+              'https://tomhemps.fra1.digitaloceanspaces.com'
+            request.httpRequest.headers['Access-Control-Allow-Origin'] = '*'
+            request.httpRequest.headers['Access-Control-Allow-Headers'] =
+              'origin, x-requested-with, content-type'
+            request.httpRequest.headers['Access-Control-Allow-Methods'] =
+              'PUT, GET, POST, DELETE, OPTIONS'
+            request.httpRequest.headers['Content-Length'] = blob.size
+            request.httpRequest.headers['Content-Type'] = blob.type
+            request.httpRequest.headers['x-amz-acl'] = 'public-read'
+          })
+
+          .send(err => {
+            if (err) return console.log(err)
+            else {
+              console.log('correct')
+
+              const url =
+                'https://tomhemps.fra1.digitaloceanspaces.com' + blob.name
+              //  callback(imageUrl, blob.name)
+              return url
+            }
+          })
+        // console.log(url)
       })
     },
   }
@@ -189,24 +227,32 @@ const UploadField = props => {
 
   // Sets the next file when it detects that its ready to go
   useEffect(() => {
-    if (state.pending.length && state.next == null) {
-      const next = state.pending[0]
+    console.log('use effect next ')
+    console.log(pending.length && next == null)
+    if (pending.length && next == null) {
+      console.log('1')
+
+      const next = pending[0]
       dispatch({ type: 'next', next })
     }
-  }, [state.next, state.pending])
+  }, [next, pending, dispatch])
 
   const countRef = useRef(0)
 
   // Processes the next pending doc when ready
   useEffect(() => {
-    if (state.pending.length && state.next) {
-      const { next } = state
+    console.log('use effect file-uploaded or set-upload-error')
+    console.log(pending.length && next)
+    if (pending.length && next) {
+      console.log('2')
       api
         .uploadFile(next)
         .then(() => {
           const prev = next
           logUploadedFile(++countRef.current)
+
           const pending = state.pending.slice(1)
+
           dispatch({
             type: 'file-uploaded',
             prev,
@@ -225,12 +271,18 @@ const UploadField = props => {
 
   // Ends the upload process
   useEffect(() => {
-    if (!state.pending.length && state.uploading) {
+    console.log('use effect files-uploaded')
+    console.log(!pending.length && uploading)
+
+    if (!pending.length && uploading) {
+      console.log('3')
       dispatch({ type: 'files-uploaded' })
     }
-  }, [state.pending.length, state.uploading])
+  }, [pending.length, uploading, dispatch])
 
   const onChangeFiles = e => {
+    console.log(e.target)
+
     if (e.target.files.length) {
       const arrFiles = Array.from(e.target.files)
       const files = arrFiles.map((file, index) => {
@@ -290,6 +342,7 @@ const UploadField = props => {
     </React.Fragment>
   )
 }
+
 export const Form = ({
   errors,
   touched,

@@ -135,7 +135,7 @@ class Wizard extends Component {
   }
 
   handleSubmit = values => {
-    const { children, files } = this.props
+    const { children, files, status } = this.props
     const { page } = this.state
     const isLastPage = page === React.Children.count(children) - 1
 
@@ -160,11 +160,11 @@ class Wizard extends Component {
       submitLead(values)
     } else if (page === 1) {
       if (files.length) {
-        const submitFiles = dispatch => {
-          dispatch({ type: 'submit' })
+        this.props.store.dispatch({ type: 'submit' })
+
+        if (status === 'FILES_UPLOADED') {
+          this.next(values)
         }
-        submitFiles()
-        console.log('page 1')
       }
     } else {
       this.next(values)
@@ -248,8 +248,9 @@ class Wizard extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   files: state.files,
+  status: state.status,
 })
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, null)(Wizard)
+export default connect(mapStateToProps, mapDispatchToProps)(Wizard)

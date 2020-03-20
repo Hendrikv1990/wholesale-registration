@@ -5,10 +5,11 @@ import Finish from './Wizard/Finish'
 import Form from './Wizard/Form'
 import Start from './Wizard/Start'
 
-const Main = ({ campaign, source, medium, targetGroup, postType }) => {
+const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
   return (
     <React.Fragment>
       <Wizard
+        store={store}
         initialValues={{
           firstName: 'ΜΑΡΙΝΟΣ',
           lastName: 'Ζακυνθινος',

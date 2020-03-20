@@ -34,7 +34,7 @@ const App = ({ locale = 'en' }) => {
         messages={flattenMessages(appStrings[locale])}
       >
         <GlobalStyle />
-        <Main />
+        <Main store={store} />
       </IntlProvider>
     </Provider>
   )
