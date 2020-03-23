@@ -31,6 +31,7 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 96px;
     line-height: 0.9;
     color: #00140f;
+    margin: 0 0 3rem 0;
     }
   p {
     font-family: 'ArchivoNarrow';

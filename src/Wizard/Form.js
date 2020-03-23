@@ -185,35 +185,42 @@ const UploadField = props => {
             'TX4ZNJ7/4ar5zPzYz65FN5TF3JZI51yAEVKtGnWw5MUG2NWXYLCNGOGQMGZLA5D',
         })
 
-        console.log(file)
-
         const blob = file.file
-        const params = { Body: blob, Bucket: 'tomhemps', Key: blob.name }
-        s3.putObject(params)
-          .on('build', request => {
-            request.httpRequest.headers.Host =
-              'https://tomhemps.fra1.digitaloceanspaces.com'
-            request.httpRequest.headers['Access-Control-Allow-Origin'] = '*'
-            request.httpRequest.headers['Access-Control-Allow-Headers'] =
-              'origin, x-requested-with, content-type'
-            request.httpRequest.headers['Access-Control-Allow-Methods'] =
-              'PUT, GET, POST, DELETE, OPTIONS'
-            request.httpRequest.headers['Content-Length'] = blob.size
-            request.httpRequest.headers['Content-Type'] = blob.type
-            request.httpRequest.headers['x-amz-acl'] = 'public-read'
-          })
+        const params = {
+          Body: blob,
+          Bucket: 'tomhemps',
+          // ContentType: blob.type,
+          Key: blob.name,
+          ACL: 'private',
+        }
+        s3.putObject(params, function(err, data) {
+          if (err) console.log(err, err.stack)
+          else console.log(data)
+        })
+        // s3.putObject(params)
+        // .on('build', request => {
+        // request.httpRequest.headers.Host =
+        //   'tomhemps.fra1.digitaloceanspaces.com'
+        // request.httpRequest.headers['Access-Control-Allow-Origin'] = '*'
+        // request.httpRequest.headers['Access-Control-Allow-Headers'] =
+        //   'origin, x-requested-with, content-type'
+        // request.httpRequest.headers['Access-Control-Allow-Methods'] =
+        //   'PUT, GET, POST, DELETE, OPTIONS'
+        // request.httpRequest.headers['Content-Length'] = blob.size
+        // request.httpRequest.headers['Content-Type'] = blob.type
+        // request.httpRequest.headers['x-amz-acl'] = 'public-read'
+        // })
 
-          .send(err => {
-            if (err) return console.log(err)
-            else {
-              console.log('correct')
+        // .send(err => {
+        //   if (err) return console.log(err)
+        //   else {
+        //     console.log('correct')
 
-              const url =
-                'https://tomhemps.fra1.digitaloceanspaces.com' + blob.name
-              //  callback(imageUrl, blob.name)
-              return url
-            }
-          })
+        //     const url = 'https://tomhemps.fra1.digitaloceanspaces.com'
+        //     //  callback(imageUrl, blob.name)
+        //     return url
+        //   }
+        // })
         // console.log(url)
       })
     },
@@ -281,8 +288,6 @@ const UploadField = props => {
   }, [pending.length, uploading, dispatch])
 
   const onChangeFiles = e => {
-    console.log(e.target)
-
     if (e.target.files.length) {
       const arrFiles = Array.from(e.target.files)
       const files = arrFiles.map((file, index) => {

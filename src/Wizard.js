@@ -61,8 +61,14 @@ const Styling = styled.div.attrs({
   className: 'wrapper',
 })`
   .main-wrapper {
+    margin: auto 7rem;
     position: relative;
     height: ${props => props.mainHeight}px;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 0;
     .main-container {
       width: 100%;
       position: absolute;
@@ -160,10 +166,10 @@ class Wizard extends Component {
       submitLead(values)
     } else if (page === 1) {
       if (files.length) {
-        this.props.store.dispatch({ type: 'submit' })
-
         if (status === 'FILES_UPLOADED') {
           this.next(values)
+        } else {
+          this.props.store.dispatch({ type: 'submit' })
         }
       }
     } else {
