@@ -24,7 +24,8 @@ export const GlobalStyle = createGlobalStyle`
      text-rendering: optimizeLegibility;
      
   }
-
+  /* Remove chrome outline blue */
+  button:focus {outline:0;}
   h1 {
     font-family: 'Bebas Neue Pro';
     text-transform: uppercase;

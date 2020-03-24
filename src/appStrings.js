@@ -17,6 +17,7 @@ export default {
       productCategory: 'Product Category',
       gdpr: 'GDPR',
       files: {
+        label: 'Add business doc',
         uploaded: {
           h1: 'Files uploaded',
           p: 'Yes it is true',

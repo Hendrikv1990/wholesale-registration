@@ -6,6 +6,8 @@ import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
 import { useDispatch, useSelector } from 'react-redux'
+import { ReactComponent as AddSVG } from '../assets/add.svg'
+
 import axios from 'axios'
 
 const Styling = styled.div.attrs({
@@ -13,6 +15,15 @@ const Styling = styled.div.attrs({
 })`
   .file-input {
     position: relative;
+    svg {
+      fill: #222;
+      height: 20px;
+    }
+    input[type='file'] {
+      cursor: pointer;
+      /* Hide the button */
+      opacity: 0;
+    }
     .success-container {
       position: absolute;
       top: 0;
@@ -30,6 +41,9 @@ const Styling = styled.div.attrs({
     border-radius: 0;
     border-bottom: 1px solid;
     box-shadow: none;
+    .react-select__value-container {
+      padding: 0;
+    }
     .react-select__indicators {
       span {
         display: none;
@@ -52,6 +66,11 @@ const Styling = styled.div.attrs({
   }
   .field-wrapper {
     margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Match the height of material ui */
+    min-height: 70px;
   }
   .width-50 {
     flex: 0 1 50%;
@@ -272,15 +291,24 @@ const UploadField = props => {
     }
   }
 
-  const Input = props => (
-    <input
-      type="file"
-      accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
-      name="doc-loader-input"
-      multiple
-      {...props}
-    />
-  )
+  const Input = props => {
+    const intl = useIntl()
+
+    return (
+      <TextField
+        label={intl.messages['form.files.label']}
+        fullWidth
+        type="file"
+        accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+        name="doc-loader-input"
+        multiple
+        InputProps={{
+          endAdornment: <AddSVG />,
+        }}
+        {...props}
+      />
+    )
+  }
 
   return (
     <React.Fragment>
