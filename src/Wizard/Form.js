@@ -11,6 +11,17 @@ import axios from 'axios'
 const Styling = styled.div.attrs({
   className: 'form-container',
 })`
+  .file-input {
+    position: relative;
+    .success-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+    }
+  }
+
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -175,8 +186,15 @@ const UploadField = props => {
   const uploading = useSelector(state => state.uploading)
 
   const api = {
-    uploadFile(file) {
-      return new Promise(resolve => {})
+    uploadFile(next) {
+      const formData = new FormData()
+      formData.append('file', next.file)
+      return axios({
+        method: 'post',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        url: 'https://fb479b71.ngrok.io/wp-json/tomhemps/v1/file_upload',
+        data: formData,
+      })
     },
   }
 
@@ -206,15 +224,11 @@ const UploadField = props => {
     console.log(pending.length && next)
     if (pending.length && next) {
       console.log('2')
-      const formData = new FormData()
-      formData.append('file', next.file)
-      axios({
-        method: 'post',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        url: 'https://fb479b71.ngrok.io/wp-json/tomhemps/v1/file_upload',
-        data: formData,
-      })
+      api
+        .uploadFile(next)
         .then(() => {
+          console.log('uploaded')
+
           const prev = next
           logUploadedFile(++countRef.current)
 
@@ -270,27 +284,24 @@ const UploadField = props => {
 
   return (
     <React.Fragment>
-      <div className="container">
-        <div>
-          <Input onChange={onChangeFiles} />
-        </div>
-        <div>
+      <div className="file-input">
+        <Input onChange={onChangeFiles} />
+        <div className="files">
           {state.files.map(({ file, src, id }, index) => (
             <div
               style={{
                 opacity: state.uploaded[id] ? 0.2 : 1,
               }}
-              key={`doc-${index}`}
-              className="doc-wrapper"
+              key={`file-${index}`}
+              className="file-wrapper"
             >
-              <div className="doc-caption">{file.name}</div>
+              <div className="file-caption">{file.name}</div>
             </div>
           ))}
         </div>
-      </div>
-      {state.status === 'FILES_UPLOADED' && (
-        <div className="success-container">
-          <div>
+
+        {state.status === 'FILES_UPLOADED' && (
+          <div className="success-container">
             <h2>
               <FormattedMessage id="form.files.uploaded.h1">
                 {message => message}
@@ -302,8 +313,8 @@ const UploadField = props => {
               </FormattedMessage>
             </p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </React.Fragment>
   )
 }

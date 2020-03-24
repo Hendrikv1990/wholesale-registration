@@ -16,6 +16,12 @@ export default {
       businessRegistration: 'Business Registration',
       productCategory: 'Product Category',
       gdpr: 'GDPR',
+      files: {
+        uploaded: {
+          h1: 'Files uploaded',
+          p: 'Yes it is true',
+        },
+      },
     },
     acknowledge: {
       h1: 'FAST GESCHAFFT',
