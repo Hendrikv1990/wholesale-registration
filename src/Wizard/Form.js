@@ -176,22 +176,7 @@ const UploadField = props => {
 
   const api = {
     uploadFile(file) {
-      return new Promise(resolve => {
-        const formData = new FormData()
-        formData.append('file', file.file)
-        axios({
-          method: 'post',
-          headers: { 'Content-Type': 'multipart/form-data' },
-          url: 'https://fb479b71.ngrok.io/wp-json/tomhemps/v1/file_upload',
-          data: formData,
-        })
-          .then(response => {
-            console.log(response)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      })
+      return new Promise(resolve => {})
     },
   }
 
@@ -221,11 +206,15 @@ const UploadField = props => {
     console.log(pending.length && next)
     if (pending.length && next) {
       console.log('2')
-      api
-        .uploadFile(next)
+      const formData = new FormData()
+      formData.append('file', next.file)
+      axios({
+        method: 'post',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        url: 'https://fb479b71.ngrok.io/wp-json/tomhemps/v1/file_upload',
+        data: formData,
+      })
         .then(() => {
-          console.log('uploaded')
-
           const prev = next
           logUploadedFile(++countRef.current)
 
