@@ -15,7 +15,7 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-  console.log(action.files)
+  console.log(action)
 
   switch (action.type) {
     case 'load':

@@ -33,7 +33,11 @@ export default {
     },
     button: {
       start: 'Start',
-      form: 'Next',
+      form: {
+        submit: 'Submit',
+        upload: 'Upload',
+        uploading: 'Uploading',
+      },
       back: 'Back',
     },
   },

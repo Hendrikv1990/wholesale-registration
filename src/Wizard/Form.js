@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
 import { useDispatch, useSelector } from 'react-redux'
-import AWS from 'aws-sdk'
+import axios from 'axios'
 
 const Styling = styled.div.attrs({
   className: 'form-container',
@@ -177,51 +177,20 @@ const UploadField = props => {
   const api = {
     uploadFile(file) {
       return new Promise(resolve => {
-        const spacesEndpoint = new AWS.Endpoint('fra1.digitaloceanspaces.com')
-        const s3 = new AWS.S3({
-          endpoint: spacesEndpoint,
-          accessKeyId: 'TX4ZNJLCNGOGQMGZLA5D',
-          secretAccessKey:
-            'TX4ZNJ7/4ar5zPzYz65FN5TF3JZI51yAEVKtGnWw5MUG2NWXYLCNGOGQMGZLA5D',
+        const formData = new FormData()
+        formData.append('file', file.file)
+        axios({
+          method: 'post',
+          headers: { 'Content-Type': 'multipart/form-data' },
+          url: 'https://fb479b71.ngrok.io/wp-json/tomhemps/v1/file_upload',
+          data: formData,
         })
-
-        const blob = file.file
-        const params = {
-          Body: blob,
-          Bucket: 'tomhemps',
-          // ContentType: blob.type,
-          Key: blob.name,
-          ACL: 'private',
-        }
-        s3.putObject(params, function(err, data) {
-          if (err) console.log(err, err.stack)
-          else console.log(data)
-        })
-        // s3.putObject(params)
-        // .on('build', request => {
-        // request.httpRequest.headers.Host =
-        //   'tomhemps.fra1.digitaloceanspaces.com'
-        // request.httpRequest.headers['Access-Control-Allow-Origin'] = '*'
-        // request.httpRequest.headers['Access-Control-Allow-Headers'] =
-        //   'origin, x-requested-with, content-type'
-        // request.httpRequest.headers['Access-Control-Allow-Methods'] =
-        //   'PUT, GET, POST, DELETE, OPTIONS'
-        // request.httpRequest.headers['Content-Length'] = blob.size
-        // request.httpRequest.headers['Content-Type'] = blob.type
-        // request.httpRequest.headers['x-amz-acl'] = 'public-read'
-        // })
-
-        // .send(err => {
-        //   if (err) return console.log(err)
-        //   else {
-        //     console.log('correct')
-
-        //     const url = 'https://tomhemps.fra1.digitaloceanspaces.com'
-        //     //  callback(imageUrl, blob.name)
-        //     return url
-        //   }
-        // })
-        // console.log(url)
+          .then(response => {
+            console.log(response)
+          })
+          .catch(error => {
+            console.log(error)
+          })
       })
     },
   }
@@ -255,6 +224,8 @@ const UploadField = props => {
       api
         .uploadFile(next)
         .then(() => {
+          console.log('uploaded')
+
           const prev = next
           logUploadedFile(++countRef.current)
 
@@ -274,7 +245,7 @@ const UploadField = props => {
           })
         })
     }
-  }, [state])
+  }, [state.pending, next])
 
   // Ends the upload process
   useEffect(() => {
