@@ -2,7 +2,6 @@ import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { device, sizes } from './assets/Styles'
-import { useSelector } from 'react-redux'
 
 const Styling = styled.div.attrs({
   className: 'footer-wrapper',
@@ -78,7 +77,6 @@ const Styling = styled.div.attrs({
 `
 
 export const Footer = ({ page, previous, width }) => {
-  const status = useSelector(state => state.status)
   const Pagination = () => {
     return (
       <div className="item">
@@ -122,21 +120,6 @@ export const Footer = ({ page, previous, width }) => {
     )
   }
 
-  const buttonName = () => {
-    switch (status) {
-      case 'FILES_UPLOADED':
-        return 'button.form.submit'
-      case 'idle':
-        return 'button.form.submit'
-      case 'LOADED':
-        return 'button.form.upload'
-      case 'PENDING':
-        return 'button.form.uploading'
-      default:
-        return 'button.form.submit'
-    }
-  }
-
   return (
     <Styling>
       {/* We show this hidden component on Desktop and Tablet only */}
@@ -146,7 +129,7 @@ export const Footer = ({ page, previous, width }) => {
       {page === 0 && <SubmitButton name="button.start" />}
       {page === 2 && <SimpleButton name="button.back" />}
       {page > 0 && page < 4 && <Pagination />}
-      {(page === 1 || page === 2) && <SubmitButton name={buttonName()} />}
+      {(page === 1 || page === 2) && <SubmitButton name="button.form.submit" />}
     </Styling>
   )
 }

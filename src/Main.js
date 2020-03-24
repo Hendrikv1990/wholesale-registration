@@ -40,6 +40,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
             label: 'Einzelkaufleute',
           },
           businessRegistration: 'asdfsdf',
+          file: {},
           // firstName: '',
           // lastName: '',
           // email: '',
@@ -53,6 +54,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
           // gdpr: false,
           // productCategories: [],
           // businessType: {},
+          // file: {},
         }}
       >
         <Wizard.Page>

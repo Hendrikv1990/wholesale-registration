@@ -1,13 +1,12 @@
 import TextField from '@material-ui/core/TextField'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
+import { Field } from 'formik'
+
 import { FormattedMessage, useIntl } from 'react-intl'
 import Select from 'react-select'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
-import { useDispatch, useSelector } from 'react-redux'
-import AWS from 'aws-sdk'
-
 const Styling = styled.div.attrs({
   className: 'form-container',
 })`
@@ -167,187 +166,6 @@ const MultiSelect = props => {
   )
 }
 
-const UploadField = props => {
-  const dispatch = useDispatch()
-  const pending = useSelector(state => state.pending)
-  const next = useSelector(state => state.next)
-  const state = useSelector(state => state)
-  const uploading = useSelector(state => state.uploading)
-
-  const api = {
-    uploadFile(file) {
-      return new Promise(resolve => {
-        const spacesEndpoint = new AWS.Endpoint('fra1.digitaloceanspaces.com')
-        const s3 = new AWS.S3({
-          endpoint: spacesEndpoint,
-          accessKeyId: 'TX4ZNJLCNGOGQMGZLA5D',
-          secretAccessKey:
-            'TX4ZNJ7/4ar5zPzYz65FN5TF3JZI51yAEVKtGnWw5MUG2NWXYLCNGOGQMGZLA5D',
-        })
-
-        const blob = file.file
-        const params = {
-          Body: blob,
-          Bucket: 'tomhemps',
-          // ContentType: blob.type,
-          Key: blob.name,
-          ACL: 'private',
-        }
-        s3.putObject(params, function(err, data) {
-          if (err) console.log(err, err.stack)
-          else console.log(data)
-        })
-        // s3.putObject(params)
-        // .on('build', request => {
-        // request.httpRequest.headers.Host =
-        //   'tomhemps.fra1.digitaloceanspaces.com'
-        // request.httpRequest.headers['Access-Control-Allow-Origin'] = '*'
-        // request.httpRequest.headers['Access-Control-Allow-Headers'] =
-        //   'origin, x-requested-with, content-type'
-        // request.httpRequest.headers['Access-Control-Allow-Methods'] =
-        //   'PUT, GET, POST, DELETE, OPTIONS'
-        // request.httpRequest.headers['Content-Length'] = blob.size
-        // request.httpRequest.headers['Content-Type'] = blob.type
-        // request.httpRequest.headers['x-amz-acl'] = 'public-read'
-        // })
-
-        // .send(err => {
-        //   if (err) return console.log(err)
-        //   else {
-        //     console.log('correct')
-
-        //     const url = 'https://tomhemps.fra1.digitaloceanspaces.com'
-        //     //  callback(imageUrl, blob.name)
-        //     return url
-        //   }
-        // })
-        // console.log(url)
-      })
-    },
-  }
-
-  const logUploadedFile = (num, color = 'green') => {
-    const msg = `%cUploaded ${num} files.`
-    const style = `color:${color};font-weight:bold;`
-    console.log(msg, style)
-  }
-
-  // Sets the next file when it detects that its ready to go
-  useEffect(() => {
-    console.log('use effect next ')
-    console.log(pending.length && next == null)
-    if (pending.length && next == null) {
-      console.log('1')
-
-      const next = pending[0]
-      dispatch({ type: 'next', next })
-    }
-  }, [next, pending, dispatch])
-
-  const countRef = useRef(0)
-
-  // Processes the next pending doc when ready
-  useEffect(() => {
-    console.log('use effect file-uploaded or set-upload-error')
-    console.log(pending.length && next)
-    if (pending.length && next) {
-      console.log('2')
-      api
-        .uploadFile(next)
-        .then(() => {
-          const prev = next
-          logUploadedFile(++countRef.current)
-
-          const pending = state.pending.slice(1)
-
-          dispatch({
-            type: 'file-uploaded',
-            prev,
-            pending,
-          })
-        })
-        .catch(error => {
-          console.error(error)
-          dispatch({
-            type: 'set-upload-error',
-            error,
-          })
-        })
-    }
-  }, [state])
-
-  // Ends the upload process
-  useEffect(() => {
-    console.log('use effect files-uploaded')
-    console.log(!pending.length && uploading)
-
-    if (!pending.length && uploading) {
-      console.log('3')
-      dispatch({ type: 'files-uploaded' })
-    }
-  }, [pending.length, uploading, dispatch])
-
-  const onChangeFiles = e => {
-    if (e.target.files.length) {
-      const arrFiles = Array.from(e.target.files)
-      const files = arrFiles.map((file, index) => {
-        const src = window.URL.createObjectURL(file)
-        return { file, id: index, src }
-      })
-      dispatch({ type: 'load', files })
-    }
-  }
-
-  const Input = props => (
-    <input
-      type="file"
-      accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
-      name="doc-loader-input"
-      multiple
-      {...props}
-    />
-  )
-
-  return (
-    <React.Fragment>
-      <div className="container">
-        <div>
-          <Input onChange={onChangeFiles} />
-        </div>
-        <div>
-          {state.files.map(({ file, src, id }, index) => (
-            <div
-              style={{
-                opacity: state.uploaded[id] ? 0.2 : 1,
-              }}
-              key={`doc-${index}`}
-              className="doc-wrapper"
-            >
-              <div className="doc-caption">{file.name}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-      {state.status === 'FILES_UPLOADED' && (
-        <div className="success-container">
-          <div>
-            <h2>
-              <FormattedMessage id="form.files.uploaded.h1">
-                {message => message}
-              </FormattedMessage>
-            </h2>
-            <p>
-              <FormattedMessage id="form.files.uploaded.p">
-                {message => message}
-              </FormattedMessage>
-            </p>
-          </div>
-        </div>
-      )}
-    </React.Fragment>
-  )
-}
-
 export const Form = ({
   errors,
   touched,
@@ -356,6 +174,7 @@ export const Form = ({
   handleBlur,
   setFieldTouched,
   setFieldValue,
+  field,
 }) => {
   const intl = useIntl()
 
@@ -548,7 +367,24 @@ export const Form = ({
         </div>
         <div className="row-container">
           <div className="field-wrapper width-100">
-            <UploadField />
+            <input
+              type="file"
+              accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+              className="file"
+              files={values.file}
+              onChange={e => {
+                const file = e.target.files[0]
+                console.log(file)
+
+                const reader = new FileReader()
+                reader.onload = item => {
+                  console.log(item)
+                  file.attachment = item.target.result
+                  return setFieldValue('file', file)
+                }
+                reader.readAsDataURL(file)
+              }}
+            />
           </div>
         </div>
 

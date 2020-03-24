@@ -4,7 +4,6 @@ import { gsap, Power3, TimelineLite } from 'gsap'
 import { CSSPlugin } from 'gsap/CSSPlugin'
 import debounce from 'lodash.debounce'
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Transition, TransitionGroup } from 'react-transition-group'
 import styled from 'styled-components'
 import * as yup from 'yup'
@@ -31,6 +30,10 @@ const FormSchema = yup.object().shape({
   postalCode: yup.string().required(),
   city: yup.string().required(),
   taxNumber: yup.string().required(),
+  // file: yup.object().shape({
+  //   // name: yup.string().required(),
+  //   attachment: yup.string().required(),
+  // }),
   dialCode: yup.object().shape({
     label: yup.string().required(),
     value: yup.string().required('Please choose on of the options'),
@@ -141,7 +144,7 @@ class Wizard extends Component {
   }
 
   handleSubmit = values => {
-    const { children, files, status } = this.props
+    const { children } = this.props
     const { page } = this.state
     const isLastPage = page === React.Children.count(children) - 1
 
@@ -151,7 +154,8 @@ class Wizard extends Component {
         axios({
           method: 'post',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          url: '',
+          url:
+            'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration/',
           data: values,
         })
           .then(response => {
@@ -164,14 +168,6 @@ class Wizard extends Component {
         return data
       }
       submitLead(values)
-    } else if (page === 1) {
-      if (files.length) {
-        if (status === 'FILES_UPLOADED') {
-          this.next(values)
-        } else {
-          this.props.store.dispatch({ type: 'submit' })
-        }
-      }
     } else {
       this.next(values)
     }
@@ -252,11 +248,4 @@ class Wizard extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  files: state.files,
-  status: state.status,
-})
-
-const mapDispatchToProps = {}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Wizard)
+export default Wizard
