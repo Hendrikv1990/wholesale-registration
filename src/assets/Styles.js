@@ -17,13 +17,25 @@ export const GlobalStyle = createGlobalStyle`
   * { box-sizing: border-box; }
 
   body {
-    font-family: 'ArchivoNarrow', 'Helvetica Neue', Arial, Helvetica, Verdana,
+    font-family: 'Archivo Narrow', 'Helvetica Neue', Arial, Helvetica, Verdana,
       sans-serif;
     color: #222;
     letter-spacing: 0.2px;
      text-rendering: optimizeLegibility;
      
   }
+  @-webkit-keyframes autofill {
+    0%,100% {
+        color: #666;
+        background: transparent;
+    }
+}
+
+input:-webkit-autofill {
+    -webkit-animation-delay: 1s; /* Safari support - any positive time runs instantly */
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
+}
   /* Remove chrome outline blue */
   button:focus {outline:0;}
   h1 {
@@ -35,7 +47,7 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0 0 3rem 0;
     }
   p {
-    font-family: 'ArchivoNarrow';
+    font-family: 'Archivo Narrow';
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;

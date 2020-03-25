@@ -11,9 +11,9 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
       <Wizard
         store={store}
         initialValues={{
-          firstName: 'ΜΑΡΙΝΟΣ',
-          lastName: 'Ζακυνθινος',
-          email: 'marinoszak@gmail.com',
+          firstName: '',
+          lastName: '',
+          email: '',
           dialCode: {
             value: '+213',
             label: 'Algeria',
@@ -53,6 +53,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
           // gdpr: false,
           // productCategories: [],
           // businessType: {},
+          files: [],
         }}
       >
         <Wizard.Page>

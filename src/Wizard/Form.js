@@ -1,5 +1,5 @@
-import TextField from '@material-ui/core/TextField'
-import React, { useEffect, useRef } from 'react'
+// import TextField from '@material-ui/core/TextField'
+import React, { useEffect, useRef, useCallback } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import Select from 'react-select'
 import styled from 'styled-components'
@@ -7,29 +7,55 @@ import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as AddSVG } from '../assets/add.svg'
+import { useDropzone } from 'react-dropzone'
 
 import axios from 'axios'
 
 const Styling = styled.div.attrs({
   className: 'form-container',
 })`
-  .file-input {
-    position: relative;
-    svg {
-      fill: #222;
-      height: 20px;
-    }
-    input[type='file'] {
+  .file {
+    .dropzone {
+      font-size: 14px;
+      color: #55706c;
+      padding: 0.5rem;
+      border: 1px solid #00140f;
+
+      background-color: #fafafa;
       cursor: pointer;
-      /* Hide the button */
-      opacity: 0;
+      animation: all 1.5s ease-in-out;
+      &:hover {
+        border: 1px solid #058273;
+      }
     }
+    .files {
+      .file-wrapper {
+        .file-caption {
+          font-size: 14px;
+          color: #55706c;
+        }
+      }
+    }
+    .accept {
+      background-color: #058273;
+    }
+    .reject {
+      background-color: red;
+    }
+
     .success-container {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       background: #fff;
+      font-size: 14px;
+      color: #55706c;
+      padding: 0.5rem;
+      border: 1px solid #00140f;
+      p {
+        margin: 0;
+      }
     }
   }
 
@@ -39,8 +65,9 @@ const Styling = styled.div.attrs({
   .react-select__control {
     border-style: none;
     border-radius: 0;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #00140f;
     box-shadow: none;
+    animation: border-bottom 0.2 ease-in-out;
     .react-select__value-container {
       padding: 0;
     }
@@ -50,13 +77,63 @@ const Styling = styled.div.attrs({
       }
     }
     &:hover {
+      cursor: pointer;
       border: none;
-      border-bottom: 2px solid;
+      padding-bottom: 0;
+      border-bottom: 1px solid #058273;
+    }
+
+    .react-select__multi-value {
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      .react-select__multi-value__label {
+        color: #55706c;
+      }
+      .react-select__multi-value__remove {
+        border-radius: 0;
+        border: 1px solid #55706c;
+        padding: 0;
+        box-sizing: border-box;
+        height: 18px;
+        color: #55706c;
+        &:hover {
+          color: #55706c;
+          border-color: #55706c;
+          background-color: #fff;
+        }
+      }
+    }
+  }
+  .react-select__menu {
+    border-radius: 0;
+    box-shadow: none;
+    margin-top: 0;
+    background-color: #fff;
+    border-bottom: 1px solid #058273;
+    .react-select__menu-list {
+      padding-bottom: 0;
+      padding-top: 0;
+      .react-select__option {
+        border-bottom: 1px solid transparent;
+        animation: border-bottom 0.2 ease-in-out;
+        color: #55706c;
+      }
+      .react-select__option--is-focused {
+        cursor: pointer;
+        background-color: inherit;
+        color: #222;
+      }
+      .react-select__option--is-selected {
+        background-color: inherit;
+        color: #222;
+      }
     }
   }
   .row-container {
     display: flex;
     width: 100%;
+    height: 100px;
   }
   .column-container {
     flex: 0 1 50%;
@@ -66,12 +143,32 @@ const Styling = styled.div.attrs({
   }
   .field-wrapper {
     margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    /* Match the height of material ui */
-    min-height: 70px;
+
+    margin-bottom: 45px;
+    position: relative;
+    input {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px 10px 10px 5px;
+      display: block;
+      border: none;
+      border-bottom: 1px solid #00140f;
+      top: -20px;
+      font-size: 14px;
+      color: #55706c;
+      &:focus,
+      &:hover {
+        outline: none;
+        border-bottom: 1px solid #058273;
+      }
+    }
+    .field-error {
+      position: absolute;
+      color: #55706c;
+      font-size: 14px;
+    }
   }
+
   .width-50 {
     flex: 0 1 50%;
   }
@@ -103,10 +200,6 @@ const Styling = styled.div.attrs({
     }
   }
 `
-
-const isEmpty = str => {
-  return !str || 0 === str.length
-}
 
 const businessTypes = [
   {
@@ -191,13 +284,24 @@ const MultiSelect = props => {
         value={value}
         classNamePrefix="react-select"
         placeholder={placeholder}
+        // menuIsOpen={true}
       />
       {error && touched && <div className="field-error">{error}</div>}
     </React.Fragment>
   )
 }
 
-const UploadField = props => {
+const TextField = ({ error, name, label, ...props }) => {
+  return (
+    <React.Fragment>
+      <input name={name} className="input" {...props} placeholder={label} />
+
+      {error ? <p className="field-error">{error}</p> : null}
+    </React.Fragment>
+  )
+}
+
+const FileField = React.memo(props => {
   const dispatch = useDispatch()
   const pending = useSelector(state => state.pending)
   const next = useSelector(state => state.next)
@@ -211,7 +315,8 @@ const UploadField = props => {
       return axios({
         method: 'post',
         headers: { 'Content-Type': 'multipart/form-data' },
-        url: 'https://fb479b71.ngrok.io/wp-json/tomhemps/v1/file_upload',
+        url:
+          'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/file_upload',
         data: formData,
       })
     },
@@ -225,11 +330,9 @@ const UploadField = props => {
 
   // Sets the next file when it detects that its ready to go
   useEffect(() => {
-    console.log('use effect next ')
-    console.log(pending.length && next == null)
+    // console.log('use effect next ')
+    // console.log(pending.length && next == null)
     if (pending.length && next == null) {
-      console.log('1')
-
       const next = pending[0]
       dispatch({ type: 'next', next })
     }
@@ -239,10 +342,10 @@ const UploadField = props => {
 
   // Processes the next pending doc when ready
   useEffect(() => {
-    console.log('use effect file-uploaded or set-upload-error')
-    console.log(pending.length && next)
+    // console.log('use effect file-uploaded or set-upload-error')
+    // console.log(pending.length && next)
     if (pending.length && next) {
-      console.log('2')
+      // console.log('2')
       api
         .uploadFile(next)
         .then(() => {
@@ -271,18 +374,19 @@ const UploadField = props => {
 
   // Ends the upload process
   useEffect(() => {
-    console.log('use effect files-uploaded')
-    console.log(!pending.length && uploading)
+    // console.log('use effect files-uploaded')
+    // console.log(!pending.length && uploading)
 
     if (!pending.length && uploading) {
-      console.log('3')
+      // console.log('3')
       dispatch({ type: 'files-uploaded' })
     }
   }, [pending.length, uploading, dispatch])
 
-  const onChangeFiles = e => {
-    if (e.target.files.length) {
-      const arrFiles = Array.from(e.target.files)
+  const onDrop = acceptedFiles => {
+    if (acceptedFiles.length) {
+      const arrFiles = Array.from(acceptedFiles)
+      props.setFieldValue('files', arrFiles)
       const files = arrFiles.map((file, index) => {
         const src = window.URL.createObjectURL(file)
         return { file, id: index, src }
@@ -291,29 +395,57 @@ const UploadField = props => {
     }
   }
 
-  const Input = props => {
-    const intl = useIntl()
+  const maxSize = 10048576
 
-    return (
-      <TextField
-        label={intl.messages['form.files.label']}
-        fullWidth
-        type="file"
-        accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
-        name="doc-loader-input"
-        multiple
-        InputProps={{
-          endAdornment: <AddSVG />,
-        }}
-        {...props}
-      />
-    )
-  }
+  const {
+    isDragActive,
+    getRootProps,
+    getInputProps,
+    isDragReject,
+    isDragAccept,
+    rejectedFiles,
+  } = useDropzone({
+    onDrop,
+    accept: '.xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf',
+    minSize: 0,
+    maxSize,
+  })
+  const isFileTooLarge =
+    rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize
+
+  const additionalClass = isDragAccept ? 'accept' : isDragReject ? 'reject' : ''
+  const intl = useIntl()
 
   return (
     <React.Fragment>
-      <div className="file-input">
-        <Input onChange={onChangeFiles} />
+      <div className="file">
+        <div
+          {...getRootProps({
+            className: `dropzone ${additionalClass}`,
+          })}
+        >
+          <input {...getInputProps()} />
+          {!isDragActive && intl.messages['form.files.label']}
+          {isDragActive && !isDragReject && "Drop it like it's hot!"}
+          {isDragReject && 'File type not accepted, sorry!'}
+          {isFileTooLarge && (
+            <div className="text-danger ">File is too large.</div>
+          )}
+          {state.status === 'FILES_UPLOADED' && (
+            <div className="success-container">
+              {/* <h2>
+              <FormattedMessage id="form.files.uploaded.h1">
+                {message => message}
+              </FormattedMessage>
+            </h2> */}
+              <p>
+                <FormattedMessage id="form.files.uploaded.p">
+                  {message => message}
+                </FormattedMessage>
+              </p>
+            </div>
+          )}
+        </div>
         <div className="files">
           {state.files.map(({ file, src, id }, index) => (
             <div
@@ -327,25 +459,10 @@ const UploadField = props => {
             </div>
           ))}
         </div>
-
-        {state.status === 'FILES_UPLOADED' && (
-          <div className="success-container">
-            <h2>
-              <FormattedMessage id="form.files.uploaded.h1">
-                {message => message}
-              </FormattedMessage>
-            </h2>
-            <p>
-              <FormattedMessage id="form.files.uploaded.p">
-                {message => message}
-              </FormattedMessage>
-            </p>
-          </div>
-        )}
       </div>
     </React.Fragment>
   )
-}
+})
 
 export const Form = ({
   errors,
@@ -355,6 +472,8 @@ export const Form = ({
   handleBlur,
   setFieldTouched,
   setFieldValue,
+  meta,
+  field,
 }) => {
   const intl = useIntl()
 
@@ -369,28 +488,22 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-50">
             <TextField
-              fullWidth
               name="firstName"
-              helperText={
-                errors.firstName && touched.firstName && errors.firstName
-              }
+              type="text"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.firstName && Boolean(errors.firstName)}
+              error={touched.firstName && errors.firstName}
               label={intl.messages['form.firstName']}
               value={values.firstName}
             />
           </div>
           <div className="field-wrapper width-100">
             <TextField
-              fullWidth
               name="lastName"
-              helperText={
-                errors.lastName && touched.lastName && errors.lastName
-              }
+              type="text"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.lastName && Boolean(errors.lastName)}
+              error={touched.lastName && errors.lastName}
               label={intl.messages['form.lastName']}
               value={values.lastName}
             />
@@ -399,12 +512,11 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-100">
             <TextField
-              fullWidth
               name="email"
-              helperText={errors.email && touched.email && errors.email}
+              type="email"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.email && Boolean(errors.email)}
+              error={touched.email && errors.email}
               label={intl.messages['form.email']}
               value={values.email}
             />
@@ -431,14 +543,11 @@ export const Form = ({
           </div>
           <div className="field-wrapper width-70">
             <TextField
-              fullWidth
               name="telephone"
-              helperText={
-                errors.telephone && touched.telephone && errors.telephone
-              }
+              type="text"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.telephone && Boolean(errors.telephone)}
+              error={touched.telephone && errors.telephone}
               label={intl.messages['form.telephone']}
               value={values.telephone}
             />
@@ -447,16 +556,11 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-100">
             <TextField
-              fullWidth
               name="businessName"
-              helperText={
-                errors.businessName &&
-                touched.businessName &&
-                errors.businessName
-              }
+              type="text"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.businessName && Boolean(errors.businessName)}
+              error={touched.businessName && errors.businessName}
               label={intl.messages['form.businessName']}
               value={values.businessName}
             />
@@ -465,16 +569,11 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-100">
             <TextField
-              fullWidth
               name="businessAddress"
-              helperText={
-                errors.businessAddress &&
-                touched.businessAddress &&
-                errors.businessAddress
-              }
+              type="text"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.businessAddress && Boolean(errors.businessAddress)}
+              error={touched.businessAddress && errors.businessAddress}
               label={intl.messages['form.businessAddress']}
               value={values.businessAddress}
             />
@@ -485,14 +584,11 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-50">
             <TextField
-              fullWidth
               name="postalCode"
-              helperText={
-                errors.postalCode && touched.postalCode && errors.postalCode
-              }
+              type="text"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.postalCode && Boolean(errors.postalCode)}
+              error={touched.postalCode && errors.postalCode}
               label={intl.messages['form.postalCode']}
               value={values.postalCode}
             />
@@ -501,7 +597,6 @@ export const Form = ({
             <TextField
               fullWidth
               name="city"
-              helperText={errors.city && touched.city && errors.city}
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.city && Boolean(errors.city)}
@@ -513,14 +608,11 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-100">
             <TextField
-              fullWidth
+              type="text"
               name="taxNumber"
-              helperText={
-                errors.taxNumber && touched.taxNumber && errors.taxNumber
-              }
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.taxNumber && Boolean(errors.taxNumber)}
+              error={touched.taxNumber && errors.taxNumber}
               label={intl.messages['form.taxNumber']}
               value={values.taxNumber}
             />
@@ -539,6 +631,7 @@ export const Form = ({
               value={values.businessType}
               classNamePrefix="react-select"
               placeholder={intl.messages['form.businessType']}
+              // menuIsOpen
             />
             {errors.businessType && touched.businessType && (
               <div className="field-error">{errors.businessType.value}</div>
@@ -547,7 +640,10 @@ export const Form = ({
         </div>
         <div className="row-container">
           <div className="field-wrapper width-100">
-            <UploadField />
+            <FileField setFieldValue={setFieldValue} />
+            {errors.files && touched.files && (
+              <div className="field-error">{errors.files}</div>
+            )}
           </div>
         </div>
 

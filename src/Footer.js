@@ -67,7 +67,7 @@ const Styling = styled.div.attrs({
             transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
               background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
             &.active {
-              background: black;
+              background: #00140f;
               color: white;
             }
           }
@@ -77,7 +77,7 @@ const Styling = styled.div.attrs({
   }
 `
 
-export const Footer = ({ page, previous, width }) => {
+export const Footer = React.memo(({ page, previous, width }) => {
   const status = useSelector(state => state.status)
   const Pagination = () => {
     return (
@@ -149,5 +149,5 @@ export const Footer = ({ page, previous, width }) => {
       {(page === 1 || page === 2) && <SubmitButton name={buttonName()} />}
     </Styling>
   )
-}
+})
 export default Footer
