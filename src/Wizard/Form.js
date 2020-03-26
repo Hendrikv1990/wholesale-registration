@@ -9,12 +9,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as AddSVG } from '../assets/add.svg'
 import { useDropzone } from 'react-dropzone'
 
-import axios from 'axios'
-
 const Styling = styled.div.attrs({
   className: 'form-container',
 })`
   .file {
+    margin: 0 1px;
     .dropzone {
       font-size: 14px;
       color: #55706c;
@@ -23,9 +22,12 @@ const Styling = styled.div.attrs({
 
       background-color: #fafafa;
       cursor: pointer;
-      animation: all 1.5s ease-in-out;
+      transition: border 500ms ease-in-out;
       &:hover {
         border: 1px solid #058273;
+      }
+      &:focus {
+        outline: 0;
       }
     }
     .files {
@@ -37,7 +39,7 @@ const Styling = styled.div.attrs({
       }
     }
     .accept {
-      background-color: #058273;
+      background-color: #cbfff2;
     }
     .reject {
       background-color: red;
@@ -67,7 +69,7 @@ const Styling = styled.div.attrs({
     border-radius: 0;
     border-bottom: 1px solid #00140f;
     box-shadow: none;
-    animation: border-bottom 0.2 ease-in-out;
+    transition: border 500ms ease-in-out;
     .react-select__value-container {
       padding: 0;
     }
@@ -116,7 +118,6 @@ const Styling = styled.div.attrs({
       padding-top: 0;
       .react-select__option {
         border-bottom: 1px solid transparent;
-        animation: border-bottom 0.2 ease-in-out;
         color: #55706c;
       }
       .react-select__option--is-focused {
@@ -156,6 +157,7 @@ const Styling = styled.div.attrs({
       top: -20px;
       font-size: 14px;
       color: #55706c;
+      transition: border 500ms ease-in-out;
       &:focus,
       &:hover {
         outline: none;
@@ -164,7 +166,7 @@ const Styling = styled.div.attrs({
     }
     .field-error {
       position: absolute;
-      color: #55706c;
+      color: #ff5151;
       font-size: 14px;
     }
   }
@@ -193,10 +195,6 @@ const Styling = styled.div.attrs({
       font-style: normal;
       line-height: 0.9;
       letter-spacing: normal;
-    }
-    h1 {
-    }
-    p {
     }
   }
 `
@@ -264,12 +262,10 @@ const MultiSelect = props => {
     placeholder,
   } = props
   const handleChange = value => {
-    // this is going to call setFieldValue and manually update values.topcis
     onChange(name, value)
   }
 
   const handleBlur = () => {
-    // this is going to call setFieldTouched and manually update touched.topcis
     onBlur(name, true)
   }
   return (
@@ -295,7 +291,6 @@ const TextField = ({ error, name, label, ...props }) => {
   return (
     <React.Fragment>
       <input name={name} className="input" {...props} placeholder={label} />
-
       {error ? <p className="field-error">{error}</p> : null}
     </React.Fragment>
   )
@@ -303,93 +298,14 @@ const TextField = ({ error, name, label, ...props }) => {
 
 const FileField = React.memo(props => {
   const dispatch = useDispatch()
-  const pending = useSelector(state => state.pending)
-  const next = useSelector(state => state.next)
   const state = useSelector(state => state)
-  const uploading = useSelector(state => state.uploading)
-
-  const api = {
-    uploadFile(next) {
-      const formData = new FormData()
-      formData.append('file', next.file)
-      return axios({
-        method: 'post',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        url:
-          'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/file_upload',
-        data: formData,
-      })
-    },
-  }
-
-  const logUploadedFile = (num, color = 'green') => {
-    const msg = `%cUploaded ${num} files.`
-    const style = `color:${color};font-weight:bold;`
-    console.log(msg, style)
-  }
-
-  // Sets the next file when it detects that its ready to go
-  useEffect(() => {
-    // console.log('use effect next ')
-    // console.log(pending.length && next == null)
-    if (pending.length && next == null) {
-      const next = pending[0]
-      dispatch({ type: 'next', next })
-    }
-  }, [next, pending, dispatch])
-
-  const countRef = useRef(0)
-
-  // Processes the next pending doc when ready
-  useEffect(() => {
-    // console.log('use effect file-uploaded or set-upload-error')
-    // console.log(pending.length && next)
-    if (pending.length && next) {
-      // console.log('2')
-      api
-        .uploadFile(next)
-        .then(() => {
-          console.log('uploaded')
-
-          const prev = next
-          logUploadedFile(++countRef.current)
-
-          const pending = state.pending.slice(1)
-
-          dispatch({
-            type: 'file-uploaded',
-            prev,
-            pending,
-          })
-        })
-        .catch(error => {
-          console.error(error)
-          dispatch({
-            type: 'set-upload-error',
-            error,
-          })
-        })
-    }
-  }, [state.pending, next])
-
-  // Ends the upload process
-  useEffect(() => {
-    // console.log('use effect files-uploaded')
-    // console.log(!pending.length && uploading)
-
-    if (!pending.length && uploading) {
-      // console.log('3')
-      dispatch({ type: 'files-uploaded' })
-    }
-  }, [pending.length, uploading, dispatch])
 
   const onDrop = acceptedFiles => {
     if (acceptedFiles.length) {
       const arrFiles = Array.from(acceptedFiles)
       props.setFieldValue('files', arrFiles)
-      const files = arrFiles.map((file, index) => {
-        const src = window.URL.createObjectURL(file)
-        return { file, id: index, src }
+      const files = arrFiles.map(file => {
+        return { file }
       })
       dispatch({ type: 'load', files })
     }
@@ -406,7 +322,8 @@ const FileField = React.memo(props => {
     rejectedFiles,
   } = useDropzone({
     onDrop,
-    accept: '.xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf',
+    accept:
+      '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf',
     minSize: 0,
     maxSize,
   })
@@ -425,39 +342,31 @@ const FileField = React.memo(props => {
           })}
         >
           <input {...getInputProps()} />
-          {!isDragActive && intl.messages['form.files.label']}
+
+          {state.files.length === 0 &&
+            !isDragActive &&
+            !isDragReject &&
+            intl.messages['form.files.label']}
           {isDragActive && !isDragReject && "Drop it like it's hot!"}
           {isDragReject && 'File type not accepted, sorry!'}
           {isFileTooLarge && (
             <div className="text-danger ">File is too large.</div>
           )}
-          {state.status === 'FILES_UPLOADED' && (
-            <div className="success-container">
-              {/* <h2>
-              <FormattedMessage id="form.files.uploaded.h1">
-                {message => message}
-              </FormattedMessage>
-            </h2> */}
-              <p>
-                <FormattedMessage id="form.files.uploaded.p">
-                  {message => message}
-                </FormattedMessage>
-              </p>
+          {!isDragActive && (
+            <div className="files">
+              {state.files.map(({ file, src, id }, index) => (
+                <div
+                  style={{
+                    opacity: state.uploaded[id] ? 0.2 : 1,
+                  }}
+                  key={`file-${index}`}
+                  className="file-wrapper"
+                >
+                  <div className="file-caption">{file.name}</div>
+                </div>
+              ))}
             </div>
           )}
-        </div>
-        <div className="files">
-          {state.files.map(({ file, src, id }, index) => (
-            <div
-              style={{
-                opacity: state.uploaded[id] ? 0.2 : 1,
-              }}
-              key={`file-${index}`}
-              className="file-wrapper"
-            >
-              <div className="file-caption">{file.name}</div>
-            </div>
-          ))}
         </div>
       </div>
     </React.Fragment>

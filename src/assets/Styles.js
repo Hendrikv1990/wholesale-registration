@@ -37,7 +37,9 @@ input:-webkit-autofill {
     -webkit-animation-fill-mode: both;
 }
   /* Remove chrome outline blue */
-  button:focus {outline:0;}
+  input:focus, textarea:focus, select:focus,button:focus{
+        outline:none !important;
+    }
   h1 {
     font-family: 'Bebas Neue Pro';
     text-transform: uppercase;

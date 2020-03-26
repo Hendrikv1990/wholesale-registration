@@ -1,13 +1,20 @@
-import React from 'react'
-import styled from 'styled-components'
 import Checkbox from '@material-ui/core/Checkbox'
+import axios from 'axios'
+import React, { useEffect, useRef } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 const Styling = styled.div.attrs({
   className: 'ack-container',
 })`
   display: flex;
   width: 100%;
+  .field-error {
+    position: absolute;
+    color: #ff5151;
+    font-size: 14px;
+  }
   .row-container {
     display: flex;
     width: 100%;
@@ -37,20 +44,90 @@ const Styling = styled.div.attrs({
       line-height: 0.9;
       letter-spacing: normal;
     }
-    h1 {
-    }
-    p {
-    }
   }
 `
 
-export const Acknowledge = ({
-  errors,
-  touched,
-  handleChange,
-  handleBlur,
-  values,
-}) => {
+const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
+  const dispatch = useDispatch()
+  const pending = useSelector(state => state.pending)
+  const next = useSelector(state => state.next)
+  const state = useSelector(state => state)
+  const uploading = useSelector(state => state.uploading)
+
+  const api = {
+    uploadFile(next) {
+      const formData = new FormData()
+      formData.append('file', next.file)
+      return axios({
+        method: 'post',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        url:
+          'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/file_upload',
+        data: formData,
+      })
+    },
+  }
+
+  const logUploadedFile = (num, color = 'green') => {
+    const msg = `%cUploaded ${num} files.`
+    const style = `color:${color};font-weight:bold;`
+    console.log(msg, style)
+  }
+
+  // Sets the next file when it detects that its ready to go
+  useEffect(() => {
+    // console.log('use effect next ')
+    // console.log(pending.length && next == null)
+    if (pending.length && next == null) {
+      const next = pending[0]
+      dispatch({ type: 'next', next })
+    }
+  }, [next, pending, dispatch])
+
+  const countRef = useRef(0)
+
+  // Processes the next pending doc when ready
+  useEffect(() => {
+    // console.log('use effect file-uploaded or set-upload-error')
+    // console.log(pending.length && next)
+    if (pending.length && next) {
+      // console.log('2')
+      api
+        .uploadFile(next)
+        .then(() => {
+          console.log('uploaded')
+
+          const prev = next
+          logUploadedFile(++countRef.current)
+
+          const pending = state.pending.slice(1)
+
+          dispatch({
+            type: 'file-uploaded',
+            prev,
+            pending,
+          })
+        })
+        .catch(error => {
+          console.error(error)
+          dispatch({
+            type: 'set-upload-error',
+            error,
+          })
+        })
+    }
+  }, [state.pending, next])
+
+  // Ends the upload process
+  useEffect(() => {
+    // console.log('use effect files-uploaded')
+    // console.log(!pending.length && uploading)
+
+    if (!pending.length && uploading) {
+      // console.log('3')
+      dispatch({ type: 'files-uploaded' })
+    }
+  }, [pending.length, uploading, dispatch])
   return (
     <Styling>
       <div className="column-container">
@@ -93,7 +170,7 @@ export const Acknowledge = ({
       <div className="column-container">
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.firstName">
+            <FormattedMessage id="form.firstName">
               {message => message}
             </FormattedMessage>
           </div>
@@ -101,7 +178,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.lastName">
+            <FormattedMessage id="form.lastName">
               {message => message}
             </FormattedMessage>
           </div>
@@ -110,7 +187,7 @@ export const Acknowledge = ({
         {/* <div className="row-container">{values.dialCode}</div> */}
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.telephone">
+            <FormattedMessage id="form.telephone">
               {message => message}
             </FormattedMessage>
           </div>
@@ -118,7 +195,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.businessName">
+            <FormattedMessage id="form.businessName">
               {message => message}
             </FormattedMessage>
           </div>
@@ -126,7 +203,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.businessName">
+            <FormattedMessage id="form.businessName">
               {message => message}
             </FormattedMessage>
           </div>
@@ -134,7 +211,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.businessAddress">
+            <FormattedMessage id="form.businessAddress">
               {message => message}
             </FormattedMessage>
           </div>
@@ -142,7 +219,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.postalCode">
+            <FormattedMessage id="form.postalCode">
               {message => message}
             </FormattedMessage>
           </div>
@@ -150,7 +227,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.city">
+            <FormattedMessage id="form.city">
               {message => message}
             </FormattedMessage>
           </div>
@@ -158,7 +235,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.taxNumber">
+            <FormattedMessage id="form.taxNumber">
               {message => message}
             </FormattedMessage>
           </div>
@@ -166,7 +243,7 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.productCategories">
+            <FormattedMessage id="form.productCategory">
               {message => message}
             </FormattedMessage>
           </div>
@@ -179,12 +256,34 @@ export const Acknowledge = ({
         </div>
         <div className="row-container">
           <div className="width-50">
-            <FormattedMessage id="acknowledge.businessType">
+            <FormattedMessage id="form.businessType">
               {message => message}
             </FormattedMessage>
           </div>
           <div className="width-50">
             {values.businessType ? values.businessType.value : ''}
+          </div>
+        </div>
+        <div className="row-container">
+          <div className="width-50">
+            <FormattedMessage id="form.businessRegistration">
+              {message => message}
+            </FormattedMessage>
+          </div>
+          <div className="width-50">
+            {values.files
+              ? state.files.map(({ file, src, id }, index) => (
+                  <div
+                    style={{
+                      opacity: state.uploaded[id] ? 0.2 : 1,
+                    }}
+                    key={`file-${index}`}
+                    className="file-wrapper"
+                  >
+                    <div className="file-caption">{file.name}</div>
+                  </div>
+                ))
+              : ''}
           </div>
         </div>
       </div>

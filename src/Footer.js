@@ -146,7 +146,8 @@ export const Footer = React.memo(({ page, previous, width }) => {
       {page === 0 && <SubmitButton name="button.start" />}
       {page === 2 && <SimpleButton name="button.back" />}
       {page > 0 && page < 4 && <Pagination />}
-      {(page === 1 || page === 2) && <SubmitButton name={buttonName()} />}
+      {page === 1 && <SubmitButton name="button.next" />}
+      {page === 2 && <SubmitButton name={buttonName()} />}
     </Styling>
   )
 })

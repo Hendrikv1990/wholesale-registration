@@ -39,8 +39,7 @@ const FormSchema = yup.object().shape({
     label: yup.string().required(),
     value: yup.string().required('Please choose on of the options'),
   }),
-  businessRegistration: yup.string().required(),
-  files: yup.array().min(1, 'Please upload the file'),
+  files: yup.array().min(1, 'Please upload a file'),
 
   productCategories: yup
 
@@ -93,7 +92,7 @@ class Wizard extends Component {
     this.mainRef = React.createRef()
     this.state = {
       message: null,
-      page: 1,
+      page: 0,
       values: props.initialValues,
       dimensions: {
         width: 0,
@@ -166,7 +165,7 @@ class Wizard extends Component {
         return data
       }
       submitLead(values)
-    } else if (page === 1) {
+    } else if (page === 2) {
       if (files.length) {
         if (status === 'FILES_UPLOADED') {
           this.next(values)

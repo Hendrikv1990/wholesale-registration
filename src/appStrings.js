@@ -17,7 +17,7 @@ export default {
       productCategory: 'Product Category',
       gdpr: 'GDPR',
       files: {
-        label: 'Add business doc',
+        label: 'Click or Drag to upload a Business Registration file',
         uploaded: {
           h1: 'Files uploaded',
           p: 'Yes it is true',
@@ -40,6 +40,7 @@ export default {
     },
     button: {
       start: 'Start',
+      next: 'Next',
       form: {
         submit: 'Submit',
         upload: 'Upload',
