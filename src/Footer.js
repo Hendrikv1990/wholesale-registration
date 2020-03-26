@@ -17,6 +17,9 @@ const Styling = styled.div.attrs({
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  .pagination {
+    margin: 0 auto;
+  }
   .item {
     div {
       display: inline-block;
@@ -65,7 +68,7 @@ export const Footer = React.memo(({ page, previous, width }) => {
   const status = useSelector(state => state.status)
   const Pagination = () => {
     return (
-      <div className="item">
+      <div className="item pagination">
         <div className="pagination-wrapper">
           <div className="pagination-container">
             <nav>

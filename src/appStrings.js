@@ -35,8 +35,10 @@ export default {
       h1: 'DANKE FÜR DEINE REGISTRIERUNG!',
       p:
         'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna.',
-      gdbr:
-        'Ich bin damit einverstanden, dass meine Daten für die oben genannten Zwecke gespeichert und genutzt werden.',
+      download: 'DOWNLOAD WHOLESALE-KATALOG',
+      email: 'E-MAIL SCHREIBEN',
+      call: 'ANRUFEN',
+      shop: 'ZUM SHOP',
     },
     button: {
       start: 'Start',
