@@ -347,7 +347,7 @@ const FileField = React.memo(props => {
             !isDragActive &&
             !isDragReject &&
             intl.messages['form.files.label']}
-          {isDragActive && !isDragReject && "Drop it like it's hot!"}
+          {isDragActive && !isDragReject && 'Drop it here'}
           {isDragReject && 'File type not accepted, sorry!'}
           {isFileTooLarge && (
             <div className="text-danger ">File is too large.</div>
