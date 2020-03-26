@@ -16,21 +16,21 @@ gsap.registerPlugin(CSSPlugin)
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const FormSchema = yup.object().shape({
-  firstName: yup.string().required(),
-  lastName: yup.string().required(),
+  firstName: yup.string().required('First Name is required'),
+  lastName: yup.string().required('Last Name is required'),
   email: yup
     .string()
     .email()
-    .required(),
+    .required('Email is required'),
   telephone: yup
     .string()
     .matches(phoneRegExp, 'Phone number is not valid')
-    .required(),
-  businessName: yup.string().required(),
-  businessAddress: yup.string().required(),
-  postalCode: yup.string().required(),
-  city: yup.string().required(),
-  taxNumber: yup.string().required(),
+    .required('Phone number is required'),
+  businessName: yup.string().required('Business Name is required'),
+  businessAddress: yup.string().required('Business Address is required'),
+  postalCode: yup.string().required('Postal Code is required'),
+  city: yup.string().required('City is required'),
+  taxNumber: yup.string().required('Tax number is required'),
   dialCode: yup.object().shape({
     label: yup.string().required(),
     value: yup.string().required('Please choose on of the options'),

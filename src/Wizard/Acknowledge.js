@@ -10,10 +10,28 @@ const Styling = styled.div.attrs({
 })`
   display: flex;
   width: 100%;
+  margin-bottom: 3rem;
+  .lead-wrapper {
+    border-bottom: 1px solid;
+  }
+  .gdpr-wrapper {
+    position: relative;
+    padding: 1rem 0;
+    a {
+      padding-left: 1rem;
+      color: #55706c;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    span {
+      padding: 0;
+    }
+  }
   .field-error {
     position: absolute;
     color: #ff5151;
     font-size: 14px;
+    bottom: 0;
   }
   .row-container {
     display: flex;
@@ -21,6 +39,7 @@ const Styling = styled.div.attrs({
   }
   .column-container {
     flex: 0 1 50%;
+    margin: 0 4rem;
   }
   .field-wrapper {
     margin: 1rem;
@@ -138,14 +157,14 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
             </FormattedMessage>
           </h1>
         </div>
-        <div className="row-container">
+        <div className="row-container lead-wrapper">
           <p className="lead">
             <FormattedMessage id="acknowledge.p">
               {message => message}
             </FormattedMessage>
           </p>
         </div>
-        <div className="row-container">
+        <div className="row-container gdpr-wrapper">
           <Checkbox
             helperText={errors.gdpr && touched.gdpr && errors.gdpr}
             type="checkbox"

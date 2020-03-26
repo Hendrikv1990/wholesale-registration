@@ -434,6 +434,7 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-30">
             <Select
+              placeholder="true"
               id="dialCode"
               onBlur={() => setFieldTouched('dialCode', true)}
               onChange={value => {

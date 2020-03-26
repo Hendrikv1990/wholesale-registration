@@ -43,7 +43,7 @@ export default {
       next: 'Next',
       form: {
         submit: 'Submit',
-        upload: 'Upload',
+        upload: 'Upload file',
         uploading: 'Uploading',
       },
       back: 'Back',

@@ -11,20 +11,45 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
       <Wizard
         store={store}
         initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          dialCode: {},
-          telephone: '',
-          businessName: '',
-          businessAddress: '',
-          postalCode: '',
-          city: '',
-          taxNumber: '',
+          firstName: 'Marinos',
+          lastName: 'Zakynthinos',
+          email: 'marinoszak@gmail.com',
+          dialCode: {
+            value: '+49',
+            label: 'Germany',
+          },
+          telephone: '15168729265',
+          businessName: 'Pardalo  katsiki',
+          businessAddress: 'Oldenburger Str. 5',
+          postalCode: '10551',
+          city: 'Berlin',
+          taxNumber: '234',
           gdpr: false,
-          productCategories: [],
-          businessType: {},
+          productCategories: [
+            {
+              value: 'category_2',
+              label: 'category_2',
+            },
+          ],
+          businessType: {
+            value: 'Einzelkaufleute',
+            label: 'Einzelkaufleute',
+          },
           files: [],
+          // firstName: '',
+          // lastName: '',
+          // email: '',
+          // dialCode: {},
+          // telephone: '',
+          // businessName: '',
+          // businessAddress: '',
+          // postalCode: '',
+          // city: '',
+          // taxNumber: '',
+          // gdpr: false,
+          // productCategories: [],
+          // businessType: {},
+          // files: [],
         }}
       >
         <Wizard.Page>

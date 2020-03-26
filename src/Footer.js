@@ -29,22 +29,6 @@ const Styling = styled.div.attrs({
     }
   }
 
-  .button {
-    color: #222;
-    background: white;
-    line-height: 1.3em;
-    border: 1px solid #222;
-    padding: 1rem 4rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    &:hover,
-    &:focus {
-      cursor: pointer;
-      background: white;
-      color: #222;
-      border-color: #222;
-    }
-  }
   .pagination-wrapper {
     .pagination-container {
       nav {
@@ -102,22 +86,56 @@ export const Footer = React.memo(({ page, previous, width }) => {
     )
   }
 
-  const SubmitButton = ({ name }) => {
+  const SubmitButton = ({ name, color }) => {
+    console.log(color)
+
+    const Button = styled.button`
+      color: ${props => (props.color === 'green' ? '#fff' : '#222')};
+      background: ${props => (props.color === 'green' ? '#058273' : '#fff')};
+      border: ${props =>
+        props.color === 'green' ? 'none' : '1px solid #222;'};
+      line-height: 1.3em;
+      padding: 1rem 4rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      &:hover,
+      &:focus {
+        cursor: pointer;
+        background: ${props => (props.color === 'green' ? '#058273' : '#fff')};
+        color: ${props => (props.color === 'green' ? '#fff' : '#222')};
+      }
+    `
+
     return (
       <div className="item">
-        <button type="submit" className="button">
+        <Button color={color} type="submit" className="button">
           <FormattedMessage id={name}>{message => message}</FormattedMessage>
-        </button>
+        </Button>
       </div>
     )
   }
 
   const SimpleButton = ({ name, className }) => {
+    const Button = styled.button`
+      color: #222;
+      background: #fff;
+      border: 1px solid #222;
+      line-height: 1.3em;
+      padding: 1rem 4rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      &:hover,
+      &:focus {
+        cursor: pointer;
+        background: #fff;
+        color: #222;
+      }
+    `
     return (
       <div className={`item ${className}`}>
-        <button type="button" onClick={previous} className="button">
+        <Button type="button" onClick={previous} className="button">
           <FormattedMessage id={name}>{message => message}</FormattedMessage>
-        </button>
+        </Button>
       </div>
     )
   }
@@ -147,7 +165,13 @@ export const Footer = React.memo(({ page, previous, width }) => {
       {page === 2 && <SimpleButton name="button.back" />}
       {page > 0 && page < 4 && <Pagination />}
       {page === 1 && <SubmitButton name="button.next" />}
-      {page === 2 && <SubmitButton name={buttonName()} />}
+      {page === 2 ? (
+        status === 'FILES_UPLOADED' ? (
+          <SubmitButton color="green" name={buttonName()} />
+        ) : (
+          <SubmitButton name={buttonName()} />
+        )
+      ) : null}
     </Styling>
   )
 })

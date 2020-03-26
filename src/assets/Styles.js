@@ -19,10 +19,11 @@ export const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Archivo Narrow', 'Helvetica Neue', Arial, Helvetica, Verdana,
       sans-serif;
-    color: #222;
     letter-spacing: 0.2px;
      text-rendering: optimizeLegibility;
-     
+     color: #55706c;
+      font-size: 14px;
+;
   }
   @-webkit-keyframes autofill {
     0%,100% {
@@ -43,10 +44,10 @@ input:-webkit-autofill {
   h1 {
     font-family: 'Bebas Neue Pro';
     text-transform: uppercase;
-    font-size: 96px;
+    font-size: 60px;
     line-height: 0.9;
     color: #00140f;
-    margin: 0 0 3rem 0;
+    margin: 0 0 1rem 0;
     }
   p {
     font-family: 'Archivo Narrow';
@@ -58,5 +59,10 @@ input:-webkit-autofill {
     letter-spacing: normal;
     color: #55706c;
   }
+  a {
+      color: #55706c;
+      text-decoration: none;
+      font-size: 14px;
+    }
   
 `
