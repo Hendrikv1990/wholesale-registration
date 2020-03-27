@@ -114,7 +114,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
       api
         .uploadFile(next)
         .then(() => {
-          console.log('uploaded')
+          // console.log('uploaded')
 
           const prev = next
           logUploadedFile(++countRef.current)

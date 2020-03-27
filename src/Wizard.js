@@ -141,33 +141,31 @@ class Wizard extends Component {
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
-  handleSubmit = values => {
-    const { children, files, status } = this.props
-    const { page } = this.state
-    const isLastPage = page === React.Children.count(children) - 1
+  submitLead = values => {
+    axios({
+      method: 'post',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      url:
+        'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_register/',
+      data: values,
+    })
+      .then(response => {
+        this.setState({ message: 'success' })
+      })
+      .catch(error => {
+        this.setState({ message: 'failure' })
+      })
+  }
 
-    if (isLastPage) {
-      const submitLead = values => {
-        let data
-        axios({
-          method: 'post',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          url: '',
-          data: values,
-        })
-          .then(response => {
-            this.setState({ message: 'success' })
-          })
-          .catch(error => {
-            this.setState({ message: 'failure' })
-          })
-          .then(() => {})
-        return data
-      }
-      submitLead(values)
-    } else if (page === 2) {
+  handleSubmit = values => {
+    const { files, status } = this.props
+    const { page } = this.state
+    // const isLastPage = page === React.Children.count(children) - 1
+
+    if (page === 2) {
       if (files.length) {
         if (status === 'FILES_UPLOADED') {
+          this.submitLead(values)
           this.next(values)
         } else {
           this.props.store.dispatch({ type: 'submit' })
