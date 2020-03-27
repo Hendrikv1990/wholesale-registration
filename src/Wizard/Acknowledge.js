@@ -4,13 +4,11 @@ import React, { useEffect, useRef } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { device } from '../assets/Styles'
 
 const Styling = styled.div.attrs({
   className: 'ack-container',
 })`
-  display: flex;
-  width: 100%;
-  margin-bottom: 3rem;
   .lead-wrapper {
     border-bottom: 1px solid;
   }
@@ -40,6 +38,10 @@ const Styling = styled.div.attrs({
   .column-container {
     flex: 0 1 50%;
     margin: 0 4rem;
+    @media ${device.tablet} {
+      margin: 0;
+      flex: 0 1 100%;
+    }
   }
   .field-wrapper {
     margin: 1rem;
@@ -291,19 +293,18 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
             </FormattedMessage>
           </div>
           <div className="width-50">
-            {values.files
-              ? state.files.map(({ file, src, id }, index) => (
-                  <div
-                    style={{
-                      color: state.uploaded[id] ? '#058273' : '##55706c',
-                    }}
-                    key={`file-${index}`}
-                    className="file-wrapper"
-                  >
-                    <div className="file-caption">{file.name}</div>
-                  </div>
-                ))
-              : ''}
+            {values.files &&
+              state.files.map(({ file, src, id }, index) => (
+                <div
+                  style={{
+                    color: state.uploaded[id] ? '#058273' : '##55706c',
+                  }}
+                  key={`file-${index}`}
+                  className="file-wrapper"
+                >
+                  <div className="file-caption">{file.name}</div>
+                </div>
+              ))}
           </div>
         </div>
       </div>

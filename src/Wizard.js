@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import * as yup from 'yup'
 import Debug from './Debug'
 import Footer from './Footer'
+import { device } from './assets/Styles'
 
 gsap.registerPlugin(CSSPlugin)
 
@@ -74,6 +75,9 @@ const Styling = styled.div.attrs({
       width: 100%;
       position: absolute;
     }
+    @media ${device.tablet} {
+      margin: auto 1rem;
+    }
   }
   .footer-wrapper {
     width: 100%;
@@ -90,7 +94,7 @@ class Wizard extends Component {
     this.mainRef = React.createRef()
     this.state = {
       message: null,
-      page: 0,
+      page: 3,
       values: props.initialValues,
       dimensions: {
         width: 0,

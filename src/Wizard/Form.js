@@ -1,13 +1,12 @@
-// import TextField from '@material-ui/core/TextField'
-import React, { useEffect, useRef, useCallback } from 'react'
+import React from 'react'
+// import { ReactComponent as AddSVG } from '../assets/add.svg'
+import { useDropzone } from 'react-dropzone'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
-import { useDispatch, useSelector } from 'react-redux'
-import { ReactComponent as AddSVG } from '../assets/add.svg'
-import { useDropzone } from 'react-dropzone'
 
 const Styling = styled.div.attrs({
   className: 'form-container',

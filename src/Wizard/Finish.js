@@ -6,10 +6,11 @@ import { device } from '../assets/Styles'
 import { ReactComponent as ArrowSVG } from '../assets/arrow.svg'
 
 const Styling = styled.div.attrs({
-  className: 'ack-container',
+  className: 'finish-container',
 })`
   display: flex;
   width: 100%;
+  flex-wrap: wrap;
   .row-container {
     display: flex;
   }
