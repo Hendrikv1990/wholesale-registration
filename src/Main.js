@@ -36,6 +36,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
             label: 'Einzelkaufleute',
           },
           files: [],
+          uploaded: {},
           // firstName: '',
           // lastName: '',
           // email: '',
@@ -57,19 +58,16 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
             return <Start {...props}></Start>
           }}
         </Wizard.Page>
-
         <Wizard.Page>
           {props => {
             return <Form {...props}></Form>
           }}
         </Wizard.Page>
-
         <Wizard.Page>
           {props => {
             return <Acknowledge {...props}></Acknowledge>
           }}
         </Wizard.Page>
-
         <Wizard.Page>
           {props => {
             return <Finish {...props}></Finish>

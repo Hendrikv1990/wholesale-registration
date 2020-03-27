@@ -304,8 +304,8 @@ const FileField = React.memo(props => {
     if (acceptedFiles.length) {
       const arrFiles = Array.from(acceptedFiles)
       props.setFieldValue('files', arrFiles)
-      const files = arrFiles.map(file => {
-        return { file }
+      const files = arrFiles.map((file, index) => {
+        return { file, id: index }
       })
       dispatch({ type: 'load', files })
     }

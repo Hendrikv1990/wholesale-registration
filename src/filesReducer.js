@@ -35,7 +35,7 @@ const reducer = (state = initialState, action) => {
         pending: action.pending,
         uploaded: {
           ...state.uploaded,
-          [action.prev.id]: action.prev.file,
+          [action.prev.id]: action.serverLocation,
         },
       }
     case 'files-uploaded':

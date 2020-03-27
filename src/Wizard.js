@@ -76,8 +76,6 @@ const Styling = styled.div.attrs({
     }
   }
   .footer-wrapper {
-    /* position: absolute;
-    bottom: 0; */
     width: 100%;
   }
 `
@@ -141,7 +139,7 @@ class Wizard extends Component {
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
-  submitLead = values => {
+  submitForm = values => {
     axios({
       method: 'post',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -158,20 +156,23 @@ class Wizard extends Component {
   }
 
   handleSubmit = values => {
-    const { files, status } = this.props
+    const { files, status, uploaded } = this.props
     const { page } = this.state
     // const isLastPage = page === React.Children.count(children) - 1
 
     if (page === 2) {
       if (files.length) {
         if (status === 'FILES_UPLOADED') {
-          this.submitLead(values)
+          values['uploaded'] = uploaded
+          console.log(values)
+          this.submitForm(values)
           this.next(values)
         } else {
           this.props.store.dispatch({ type: 'submit' })
         }
       }
     } else {
+      console.log(values)
       this.next(values)
     }
   }
@@ -212,7 +213,7 @@ class Wizard extends Component {
         <Formik
           initialValues={values}
           validationSchema={this.getValidationSchema(this.state.page)}
-          enableReinitialize={false}
+          enableReinitialize={true}
           validate={this.validate}
           onSubmit={this.handleSubmit}
           render={props => (
@@ -254,6 +255,7 @@ class Wizard extends Component {
 const mapStateToProps = (state, ownProps) => ({
   files: state.files,
   status: state.status,
+  uploaded: state.uploaded,
 })
 
 const mapDispatchToProps = {}

@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
@@ -58,6 +59,19 @@ const Styling = styled.div.attrs({
     }
   }
 `
+const handleDownload = e => {
+  e.preventDefault()
+  // https://stackoverflow.com/questions/40707684/how-do-i-save-a-file-getting-downloaded-from-server-using-react/40708651
+  axios({
+    method: 'get',
+    url:
+      'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration/',
+  })
+    .then(response => {
+      window.open(response.data.wholesale_catalog)
+    })
+    .catch(error => {})
+}
 
 export const Finish = ({
   errors,
@@ -87,7 +101,7 @@ export const Finish = ({
       </div>
       <div className="column-container">
         <div className="row-container link">
-          <a href="download">
+          <a onClick={e => handleDownload(e)}>
             <div className="width-50">
               <FormattedMessage id="finish.download">
                 {message => message}

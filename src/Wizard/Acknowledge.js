@@ -113,9 +113,9 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
       // console.log('2')
       api
         .uploadFile(next)
-        .then(() => {
-          // console.log('uploaded')
-
+        .then(response => {
+          console.log(response)
+          const serverLocation = response.data
           const prev = next
           logUploadedFile(++countRef.current)
 
@@ -124,6 +124,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
           dispatch({
             type: 'file-uploaded',
             prev,
+            serverLocation,
             pending,
           })
         })
@@ -294,7 +295,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
               ? state.files.map(({ file, src, id }, index) => (
                   <div
                     style={{
-                      opacity: state.uploaded[id] ? 0.2 : 1,
+                      color: state.uploaded[id] ? '#058273' : '##55706c',
                     }}
                     key={`file-${index}`}
                     className="file-wrapper"
