@@ -9,6 +9,11 @@ import { device } from '../assets/Styles'
 const Styling = styled.div.attrs({
   className: 'ack-container',
 })`
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+
   .lead-wrapper {
     border-bottom: 1px solid;
   }

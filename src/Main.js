@@ -25,16 +25,8 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
           city: 'Berlin',
           taxNumber: '234',
           gdpr: false,
-          productCategories: [
-            {
-              value: 'category_2',
-              label: 'category_2',
-            },
-          ],
-          businessType: {
-            value: 'Einzelkaufleute',
-            label: 'Einzelkaufleute',
-          },
+          productCategories: [],
+          businessType: {},
           files: [],
           uploaded: {},
           // firstName: '',

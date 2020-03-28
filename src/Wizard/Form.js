@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // import { ReactComponent as AddSVG } from '../assets/add.svg'
 import { useDropzone } from 'react-dropzone'
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -7,6 +7,7 @@ import Select from 'react-select'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
+import axios from 'axios'
 
 const Styling = styled.div.attrs({
   className: 'form-container',
@@ -233,20 +234,40 @@ const businessTypes = [
   },
 ]
 
-const productsCategories = [
-  {
-    value: 'category_1',
-    label: 'category_1',
-  },
-  {
-    value: 'category_2',
-    label: 'category_2',
-  },
-  {
-    value: 'category_3',
-    label: 'category_3',
-  },
-]
+const getCategories = () => {
+  let result = []
+  axios
+    .get(
+      'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration',
+      {},
+    )
+    .then(response => {
+      const r = response.data.categories.map(category => {
+        return { value: category.id, label: category.name }
+      })
+      result.push(...r)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  console.log(result)
+  return result
+}
+
+// const productsCategories = [
+//   {
+//     value: 'category_1',
+//     label: 'category_1',
+//   },
+//   {
+//     value: 'category_2',
+//     label: 'category_2',
+//   },
+//   {
+//     value: 'category_3',
+//     label: 'category_3',
+//   },
+// ]
 
 const MultiSelect = props => {
   const {
@@ -322,7 +343,7 @@ const FileField = React.memo(props => {
   } = useDropzone({
     onDrop,
     accept:
-      '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf',
+      '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf',
     minSize: 0,
     maxSize,
   })
@@ -384,6 +405,12 @@ export const Form = ({
   field,
 }) => {
   const intl = useIntl()
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    const c = getCategories()
+    setCategories(c)
+  }, [])
 
   return (
     <Styling>
@@ -565,7 +592,7 @@ export const Form = ({
               onBlur={setFieldTouched}
               error={errors.productCategories}
               touched={touched.productCategories}
-              options={productsCategories}
+              options={categories}
               classNamePrefix="react-select"
               placeholder={intl.messages['form.productCategories']}
             />

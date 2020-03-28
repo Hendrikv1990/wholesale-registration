@@ -94,7 +94,7 @@ class Wizard extends Component {
     this.mainRef = React.createRef()
     this.state = {
       message: null,
-      page: 3,
+      page: 0,
       values: props.initialValues,
       dimensions: {
         width: 0,
@@ -217,7 +217,7 @@ class Wizard extends Component {
         <Formik
           initialValues={values}
           validationSchema={this.getValidationSchema(this.state.page)}
-          enableReinitialize={true}
+          enableReinitialize={false}
           validate={this.validate}
           onSubmit={this.handleSubmit}
           render={props => (
