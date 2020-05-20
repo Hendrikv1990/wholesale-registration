@@ -75,10 +75,11 @@ const Styling = styled.div.attrs({
 
 const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
   const dispatch = useDispatch()
-  const pending = useSelector(state => state.pending)
-  const next = useSelector(state => state.next)
-  const state = useSelector(state => state)
-  const uploading = useSelector(state => state.uploading)
+  const pending = useSelector((state) => state.files.pending)
+
+  const next = useSelector((state) => state.files.next)
+  const filesState = useSelector((state) => state.files)
+  const uploading = useSelector((state) => state.files.uploading)
 
   const api = {
     uploadFile(next) {
@@ -120,13 +121,13 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
       // console.log('2')
       api
         .uploadFile(next)
-        .then(response => {
+        .then((response) => {
           console.log(response)
           const serverLocation = response.data
           const prev = next
           logUploadedFile(++countRef.current)
 
-          const pending = state.pending.slice(1)
+          const pending = filesState.pending.slice(1)
 
           dispatch({
             type: 'file-uploaded',
@@ -135,7 +136,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
             pending,
           })
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error)
           dispatch({
             type: 'set-upload-error',
@@ -143,7 +144,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
           })
         })
     }
-  }, [state.pending, next])
+  }, [filesState.pending, next])
 
   // Ends the upload process
   useEffect(() => {
@@ -161,14 +162,14 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <h1>
             <FormattedMessage id="acknowledge.h1">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </h1>
         </div>
         <div className="row-container lead-wrapper">
           <p className="lead">
             <FormattedMessage id="acknowledge.p">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </p>
         </div>
@@ -186,7 +187,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
             rel="noopener noreferrer"
           >
             <FormattedMessage id="acknowledge.gdbr">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </a>
           {errors.gdpr && touched.gdpr && (
@@ -198,7 +199,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.firstName">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.firstName}</div>
@@ -206,7 +207,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.lastName">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.lastName}</div>
@@ -215,7 +216,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.telephone">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.telephone}</div>
@@ -223,7 +224,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.businessName">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.businessName}</div>
@@ -231,7 +232,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.businessName">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.businessName}</div>
@@ -239,7 +240,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.businessAddress">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.businessAddress}</div>
@@ -247,7 +248,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.postalCode">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.postalCode}</div>
@@ -255,7 +256,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.city">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.city}</div>
@@ -263,7 +264,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.taxNumber">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">{values.taxNumber}</div>
@@ -271,12 +272,12 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.productCategory">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">
             {values.productCategories &&
-              values.productCategories.map(category => {
+              values.productCategories.map((category) => {
                 return `${category.value} `
               })}
           </div>
@@ -284,7 +285,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.businessType">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">
@@ -294,15 +295,15 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         <div className="row-container">
           <div className="width-50">
             <FormattedMessage id="form.businessRegistration">
-              {message => message}
+              {(message) => message}
             </FormattedMessage>
           </div>
           <div className="width-50">
             {values.files &&
-              state.files.map(({ file, src, id }, index) => (
+              filesState.files.map(({ file, src, id }, index) => (
                 <div
                   style={{
-                    color: state.uploaded[id] ? '#058273' : '##55706c',
+                    color: filesState.uploaded[id] ? '#058273' : '##55706c',
                   }}
                   key={`file-${index}`}
                   className="file-wrapper"

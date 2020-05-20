@@ -1,6 +1,8 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Styling = styled.div.attrs({
   className: 'start-container',
@@ -26,21 +28,55 @@ const Styling = styled.div.attrs({
   }
 `
 
-export const Start = props => {
+export const Start = (props) => {
+  const dispatch = useDispatch()
+  const formState = useSelector((state) => state.form)
+
+  const getForm = () => {
+    return axios.get(
+      'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration',
+      {},
+    )
+  }
+
+  useEffect(() => {
+    getForm()
+      .then((response) => {
+        console.log(response, 'response')
+
+        dispatch({
+          type: 'RECEIVE_FORM',
+          form: response.data,
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
+
   return (
-    <Styling>
-      <div className="hero-container">
-        <span>Händlersuche</span>
-        <h1>Lorem ipsum dolor sit amet.</h1>
-        <p className="lead">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-          nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat.
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-          nonummy nibh euismod tincidunt ut laoreet dolore magna.
-        </p>
-      </div>
-      <div className="image-wrapper"></div>
-    </Styling>
+    <React.Fragment>
+      {formState && (
+        <Styling>
+          <div className="hero-container">
+            <span>{formState.wholesale_subtitle}</span>
+            <h1>{formState.wholesale_title}</h1>
+            <p className="lead">{formState.wholesale_description}</p>
+            <div className="links">
+              <span>
+                {formState.login_message}
+                <a href={formState.login_link.url}>
+                  {formState.login_link.title}
+                </a>
+              </span>
+            </div>
+          </div>
+          <div className="image-wrapper">
+            <img src={formState.wholesale_image}></img>
+          </div>
+        </Styling>
+      )}
+    </React.Fragment>
   )
 }
 

@@ -242,13 +242,13 @@ const getCategories = () => {
       'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration',
       {},
     )
-    .then(response => {
-      const r = response.data.categories.map(category => {
+    .then((response) => {
+      const r = response.data.categories.map((category) => {
         return { value: category.id, label: category.name }
       })
       result.push(...r)
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error)
     })
   console.log(result)
@@ -270,7 +270,7 @@ const getCategories = () => {
 //   },
 // ]
 
-const MultiSelect = props => {
+const MultiSelect = (props) => {
   const {
     name,
     label,
@@ -282,7 +282,7 @@ const MultiSelect = props => {
     onChange,
     placeholder,
   } = props
-  const handleChange = value => {
+  const handleChange = (value) => {
     onChange(name, value)
   }
 
@@ -317,11 +317,11 @@ const TextField = ({ error, name, label, ...props }) => {
   )
 }
 
-const FileField = React.memo(props => {
+const FileField = React.memo((props) => {
   const dispatch = useDispatch()
-  const state = useSelector(state => state)
+  const filesState = useSelector((state) => state.files)
 
-  const onDrop = acceptedFiles => {
+  const onDrop = (acceptedFiles) => {
     if (acceptedFiles.length) {
       const arrFiles = Array.from(acceptedFiles)
       props.setFieldValue('files', arrFiles)
@@ -364,7 +364,7 @@ const FileField = React.memo(props => {
         >
           <input {...getInputProps()} />
 
-          {state.files.length === 0 &&
+          {filesState.files.length === 0 &&
             !isDragActive &&
             !isDragReject &&
             intl.messages['form.files.label']}
@@ -375,10 +375,10 @@ const FileField = React.memo(props => {
           )}
           {!isDragActive && (
             <div className="files">
-              {state.files.map(({ file, src, id }, index) => (
+              {filesState.files.map(({ file, src, id }, index) => (
                 <div
                   style={{
-                    opacity: state.uploaded[id] ? 0.2 : 1,
+                    opacity: filesState.uploaded[id] ? 0.2 : 1,
                   }}
                   key={`file-${index}`}
                   className="file-wrapper"
@@ -417,7 +417,9 @@ export const Form = ({
     <Styling>
       <div className="row-container">
         <h1>
-          <FormattedMessage id="form.h1">{message => message}</FormattedMessage>
+          <FormattedMessage id="form.h1">
+            {(message) => message}
+          </FormattedMessage>
         </h1>
       </div>
       <div className="column-container">
@@ -464,13 +466,13 @@ export const Form = ({
               placeholder="true"
               id="dialCode"
               onBlur={() => setFieldTouched('dialCode', true)}
-              onChange={value => {
+              onChange={(value) => {
                 return setFieldValue('dialCode', value)
               }}
               name="dialCode"
               options={dialCodes}
-              getOptionLabel={option => option.value}
-              getOptionValue={option => option.value}
+              getOptionLabel={(option) => option.value}
+              getOptionValue={(option) => option.value}
               value={values.dialCode}
               classNamePrefix="react-select"
             />
@@ -560,7 +562,7 @@ export const Form = ({
             <Select
               id="businessType"
               onBlur={() => setFieldTouched('businessType', true)}
-              onChange={value => {
+              onChange={(value) => {
                 return setFieldValue('businessType', value)
               }}
               name="businessType"
