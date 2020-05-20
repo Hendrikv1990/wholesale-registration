@@ -3,14 +3,26 @@ import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { device, sizes } from './assets/Styles'
 import { useSelector } from 'react-redux'
-
+import SubmitButton from './SubmitButton'
 const Styling = styled.div.attrs({
   className: 'footer-wrapper',
 })`
-  .footer-container {
+  .links {
+    display: flex;
+    flex-direction: column;
+    font-family: ArchivoNarrow;
+    font-size: 14px;
+    color: #55706c;
+    span {
+      a {
+        color: #068273;
+      }
+    }
   }
+
   .hidden {
     visibility: hidden;
+    display: none;
   }
   width: 100%;
   display: flex;
@@ -91,36 +103,6 @@ export const Footer = React.memo(({ page, previous, width }) => {
     )
   }
 
-  const SubmitButton = ({ name, color }) => {
-    console.log(color)
-
-    const Button = styled.button`
-      color: ${(props) => (props.color === 'green' ? '#fff' : '#222')};
-      background: ${(props) => (props.color === 'green' ? '#058273' : '#fff')};
-      border: ${(props) =>
-        props.color === 'green' ? 'none' : '1px solid #222;'};
-      line-height: 1.3em;
-      padding: 1rem 4rem;
-      text-transform: uppercase;
-      font-weight: bold;
-      &:hover,
-      &:focus {
-        cursor: pointer;
-        background: ${(props) =>
-          props.color === 'green' ? '#058273' : '#fff'};
-        color: ${(props) => (props.color === 'green' ? '#fff' : '#222')};
-      }
-    `
-
-    return (
-      <div className="item">
-        <Button color={color} type="submit" className="button">
-          {name}
-        </Button>
-      </div>
-    )
-  }
-
   const SimpleButton = ({ name, className }) => {
     const Button = styled.button`
       color: #222;
@@ -173,7 +155,16 @@ export const Footer = React.memo(({ page, previous, width }) => {
             />
           )}
           {page === 0 && (
-            <SubmitButton name={formState.wholesale_register_button} />
+            <React.Fragment>
+              <div className="links">
+                <span>
+                  {formState.login_message}
+                  <a href={formState.login_link.url}>
+                    {formState.login_link.title}
+                  </a>
+                </span>
+              </div>
+            </React.Fragment>
           )}
           {page === 1 && (
             <div className="links">

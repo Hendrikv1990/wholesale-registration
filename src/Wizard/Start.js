@@ -1,9 +1,9 @@
 import axios from 'axios'
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
-import { useDispatch, useSelector } from 'react-redux'
-
+import SubmitButton from '../SubmitButton'
 const Styling = styled.div.attrs({
   className: 'start-container',
 })`
@@ -15,12 +15,13 @@ const Styling = styled.div.attrs({
     flex: 0 1 50%;
 
     span {
+      font-family: BebasNeuePro;
       font-size: 20px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
       line-height: 0.9;
-      letter-spacing: normal;
+      text-transform: capitalize;
     }
   }
   .image-wrapper {
@@ -62,14 +63,7 @@ export const Start = (props) => {
             <span>{formState.wholesale_subtitle}</span>
             <h1>{formState.wholesale_title}</h1>
             <p className="lead">{formState.wholesale_description}</p>
-            <div className="links">
-              <span>
-                {formState.login_message}
-                <a href={formState.login_link.url}>
-                  {formState.login_link.title}
-                </a>
-              </span>
-            </div>
+            <SubmitButton name={formState.wholesale_register_button} />
           </div>
           <div className="image-wrapper">
             <img src={formState.wholesale_image}></img>

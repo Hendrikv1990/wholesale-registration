@@ -1,7 +1,7 @@
 const RECEIVE_FORM = 'RECEIVE_FORM'
 
 const formInitialState = {
-  form: {},
+  form: null,
 }
 
 export const reducer = (state = formInitialState.form, action) => {

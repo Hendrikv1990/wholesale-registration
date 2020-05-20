@@ -79,6 +79,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
 
   const next = useSelector((state) => state.files.next)
   const filesState = useSelector((state) => state.files)
+  const formState = useSelector((state) => state.form)
   const uploading = useSelector((state) => state.files.uploading)
 
   const api = {
@@ -103,8 +104,8 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
 
   // Sets the next file when it detects that its ready to go
   useEffect(() => {
-    // console.log('use effect next ')
-    // console.log(pending.length && next == null)
+    console.log('use effect next ')
+    console.log(pending.length && next == null)
     if (pending.length && next == null) {
       const next = pending[0]
       dispatch({ type: 'next', next })
@@ -118,7 +119,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
     // console.log('use effect file-uploaded or set-upload-error')
     // console.log(pending.length && next)
     if (pending.length && next) {
-      // console.log('2')
+      console.log('2')
       api
         .uploadFile(next)
         .then((response) => {
@@ -148,7 +149,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
 
   // Ends the upload process
   useEffect(() => {
-    // console.log('use effect files-uploaded')
+    console.log('use effect files-uploaded')
     // console.log(!pending.length && uploading)
 
     if (!pending.length && uploading) {
@@ -160,11 +161,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
     <Styling>
       <div className="column-container">
         <div className="row-container">
-          <h1>
-            <FormattedMessage id="acknowledge.h1">
-              {(message) => message}
-            </FormattedMessage>
-          </h1>
+          <h1>{formState.before_confirmation_title}</h1>
         </div>
         <div className="row-container lead-wrapper">
           <p className="lead">

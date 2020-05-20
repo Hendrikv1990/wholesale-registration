@@ -91,7 +91,10 @@ export const Finish = ({
           <h1>{formState.thanks_title}</h1>
         </div>
         <div className="row-container">
-          <p className="lead">{formState.thanks_description}</p>
+          <div
+            className="lead"
+            dangerouslySetInnerHTML={{ __html: formState.thanks_description }}
+          ></div>
         </div>
         <div className="row-container"></div>
       </div>
@@ -123,7 +126,7 @@ export const Finish = ({
           </a>
         </div>
         <div className="row-container link">
-          <a href={formState.shop.url}>
+          <a href={formState.wholesale_shop.url}>
             <div className="width-50">{formState.wholesale_shop.title}</div>
             <div className="width-50 arrow">
               <ArrowSVG />
