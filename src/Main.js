@@ -11,57 +11,53 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
       <Wizard
         store={store}
         initialValues={{
-          firstName: 'Marinos',
-          lastName: 'Zakynthinos',
-          email: 'marinoszak@gmail.com',
-          dialCode: {
-            value: '+49',
-            label: 'Germany',
-          },
-          telephone: '15168729265',
-          businessName: 'Pardalo  katsiki',
-          businessAddress: 'Oldenburger Str. 5',
-          postalCode: '10551',
-          city: 'Berlin',
-          taxNumber: '234',
+          // firstName: 'Marinos',
+          // lastName: 'Zakynthinos',
+          // email: 'marinoszak@gmail.com',
+          // dialCode: {
+          //   value: '+49',
+          //   label: 'Germany',
+          // },
+          // telephone: '15168729265',
+          // businessName: 'Pardalo  katsiki',
+          // businessAddress: 'Oldenburger Str. 5',
+          // postalCode: '10551',
+          // city: 'Berlin',
+          // taxNumber: '234',
+          uploaded: {},
+          firstName: '',
+          lastName: '',
+          email: '',
+          dialCode: {},
+          telephone: '',
+          businessName: '',
+          businessAddress: '',
+          postalCode: '',
+          city: '',
+          taxNumber: '',
           gdpr: false,
           productCategories: [],
           businessType: {},
           files: [],
-          uploaded: {},
-          // firstName: '',
-          // lastName: '',
-          // email: '',
-          // dialCode: {},
-          // telephone: '',
-          // businessName: '',
-          // businessAddress: '',
-          // postalCode: '',
-          // city: '',
-          // taxNumber: '',
-          // gdpr: false,
-          // productCategories: [],
-          // businessType: {},
-          // files: [],
         }}
       >
         <Wizard.Page>
-          {props => {
+          {(props) => {
             return <Start {...props}></Start>
           }}
         </Wizard.Page>
         <Wizard.Page>
-          {props => {
+          {(props) => {
             return <Form {...props}></Form>
           }}
         </Wizard.Page>
         <Wizard.Page>
-          {props => {
+          {(props) => {
             return <Acknowledge {...props}></Acknowledge>
           }}
         </Wizard.Page>
         <Wizard.Page>
-          {props => {
+          {(props) => {
             return <Finish {...props}></Finish>
           }}
         </Wizard.Page>

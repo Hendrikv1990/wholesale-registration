@@ -162,12 +162,9 @@ class Wizard extends Component {
     // const isLastPage = page === React.Children.count(children) - 1
 
     if (page === 2) {
-      console.log(page, 'page===2')
-
       if (files.length) {
         if (status === 'FILES_UPLOADED') {
           values['uploaded'] = uploaded
-          console.log(values)
           this.submitForm(values)
           this.next(values)
         } else {
@@ -175,7 +172,6 @@ class Wizard extends Component {
         }
       }
     } else {
-      console.log(values)
       this.next(values)
     }
   }

@@ -76,6 +76,31 @@ const Styling = styled.div.attrs({
   }
 `
 
+const SimpleButton = ({ name, className, previous }) => {
+  const Button = styled.button`
+    color: #222;
+    background: #fff;
+    border: 1px solid #222;
+    line-height: 1.3em;
+    padding: 1rem 4rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      background: #fff;
+      color: #222;
+    }
+  `
+  return (
+    <div className={`item ${className}`}>
+      <Button type="button" onClick={previous} className="button">
+        <FormattedMessage id={name}>{(message) => message}</FormattedMessage>
+      </Button>
+    </div>
+  )
+}
+
 export const Footer = React.memo(({ page, previous, width }) => {
   const status = useSelector((state) => state.files.status)
   const formState = useSelector((state) => state.form)
@@ -103,31 +128,6 @@ export const Footer = React.memo(({ page, previous, width }) => {
     )
   }
 
-  const SimpleButton = ({ name, className }) => {
-    const Button = styled.button`
-      color: #222;
-      background: #fff;
-      border: 1px solid #222;
-      line-height: 1.3em;
-      padding: 1rem 4rem;
-      text-transform: uppercase;
-      font-weight: bold;
-      &:hover,
-      &:focus {
-        cursor: pointer;
-        background: #fff;
-        color: #222;
-      }
-    `
-    return (
-      <div className={`item ${className}`}>
-        <Button type="button" onClick={previous} className="button">
-          <FormattedMessage id={name}>{(message) => message}</FormattedMessage>
-        </Button>
-      </div>
-    )
-  }
-
   const buttonName = () => {
     switch (status) {
       case 'FILES_UPLOADED':
@@ -135,7 +135,7 @@ export const Footer = React.memo(({ page, previous, width }) => {
       case 'idle':
         return 'button.form.submit'
       case 'LOADED':
-        return 'button.form.upload'
+        return 'button.form.submit'
       case 'PENDING':
         return 'button.form.uploading'
       default:
@@ -191,9 +191,16 @@ export const Footer = React.memo(({ page, previous, width }) => {
           )}
           {page === 2 ? (
             status === 'FILES_UPLOADED' ? (
-              <SubmitButton color="green" name={buttonName()} />
+              <SubmitButton
+                color="green"
+                name={formState.wholesale_submit_button}
+                previous={previous}
+              />
             ) : (
-              <SubmitButton name={buttonName()} />
+              <SubmitButton
+                name={formState.wholesale_submit_button}
+                previous={previous}
+              />
             )
           ) : null}
         </Styling>

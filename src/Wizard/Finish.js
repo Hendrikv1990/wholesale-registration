@@ -1,6 +1,5 @@
 import axios from 'axios'
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { ReactComponent as ArrowSVG } from '../assets/arrow.svg'

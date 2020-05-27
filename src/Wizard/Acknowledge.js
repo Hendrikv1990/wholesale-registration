@@ -104,8 +104,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
 
   // Sets the next file when it detects that its ready to go
   useEffect(() => {
-    console.log('use effect next ')
-    console.log(pending.length && next == null)
+    // console.log(pending.length && next == null)
     if (pending.length && next == null) {
       const next = pending[0]
       dispatch({ type: 'next', next })
@@ -119,11 +118,9 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
     // console.log('use effect file-uploaded or set-upload-error')
     // console.log(pending.length && next)
     if (pending.length && next) {
-      console.log('2')
       api
         .uploadFile(next)
         .then((response) => {
-          console.log(response)
           const serverLocation = response.data
           const prev = next
           logUploadedFile(++countRef.current)
@@ -149,7 +146,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
 
   // Ends the upload process
   useEffect(() => {
-    console.log('use effect files-uploaded')
+    // console.log('use effect files-uploaded')
     // console.log(!pending.length && uploading)
 
     if (!pending.length && uploading) {

@@ -15,7 +15,7 @@ const Styling = styled.div.attrs({
     flex: 0 1 50%;
 
     span {
-      font-family: BebasNeuePro;
+      font-family: Bebas Neue Pro;
       font-size: 20px;
       font-weight: normal;
       font-stretch: normal;
@@ -43,16 +43,12 @@ export const Start = (props) => {
   useEffect(() => {
     getForm()
       .then((response) => {
-        console.log(response, 'response')
-
         dispatch({
           type: 'RECEIVE_FORM',
           form: response.data,
         })
       })
-      .catch((error) => {
-        console.log(error)
-      })
+      .catch((error) => {})
   }, [])
 
   return (
