@@ -1,7 +1,6 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import axios from 'axios'
 import React, { useEffect, useRef } from 'react'
-import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
@@ -76,12 +75,10 @@ const Styling = styled.div.attrs({
 const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
   const dispatch = useDispatch()
   const pending = useSelector((state) => state.files.pending)
-
   const next = useSelector((state) => state.files.next)
   const filesState = useSelector((state) => state.files)
   const formState = useSelector((state) => state.form)
   const uploading = useSelector((state) => state.files.uploading)
-
   const api = {
     uploadFile(next) {
       const formData = new FormData()
@@ -158,14 +155,10 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
     <Styling>
       <div className="column-container">
         <div className="row-container">
-          <h1>{formState.before_confirmation_title}</h1>
+          <h1>{formState.acknowledge.title}</h1>
         </div>
         <div className="row-container lead-wrapper">
-          <p className="lead">
-            <FormattedMessage id="acknowledge.p">
-              {(message) => message}
-            </FormattedMessage>
-          </p>
+          <p className="lead">{formState.acknowledge.p}</p>
         </div>
         <div className="row-container gdpr-wrapper">
           <Checkbox
@@ -180,9 +173,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FormattedMessage id="acknowledge.gdbr">
-              {(message) => message}
-            </FormattedMessage>
+            {formState.acknowledge.gdpr}
           </a>
           {errors.gdpr && touched.gdpr && (
             <div className="field-error">{errors.gdpr}</div>
@@ -191,84 +182,40 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
       </div>
       <div className="column-container">
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.firstName">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.firstName}</div>
           <div className="width-50">{values.firstName}</div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.lastName">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.lastName}</div>
           <div className="width-50">{values.lastName}</div>
         </div>
-        {/* <div className="row-container">{values.dialCode}</div> */}
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.telephone">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.telephone}</div>
           <div className="width-50">{values.telephone}</div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.businessName">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.businessName}</div>
           <div className="width-50">{values.businessName}</div>
         </div>
+
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.businessName">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
-          <div className="width-50">{values.businessName}</div>
-        </div>
-        <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.businessAddress">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.businessAddress}</div>
           <div className="width-50">{values.businessAddress}</div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.postalCode">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.postalCode}</div>
           <div className="width-50">{values.postalCode}</div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.city">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.city}</div>
           <div className="width-50">{values.city}</div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.taxNumber">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.taxNumber}</div>
           <div className="width-50">{values.taxNumber}</div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.productCategory">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.productCategories}</div>
           <div className="width-50">
             {values.productCategories &&
               values.productCategories.map((category) => {
@@ -277,21 +224,13 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
           </div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.businessType">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.businessType}</div>
           <div className="width-50">
             {values.businessType ? values.businessType.value : ''}
           </div>
         </div>
         <div className="row-container">
-          <div className="width-50">
-            <FormattedMessage id="form.businessRegistration">
-              {(message) => message}
-            </FormattedMessage>
-          </div>
+          <div className="width-50">{formState.form.businessRegistration}</div>
           <div className="width-50">
             {values.files &&
               filesState.files.map(({ file, src, id }, index) => (

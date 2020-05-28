@@ -1,13 +1,11 @@
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-// import { ReactComponent as AddSVG } from '../assets/add.svg'
 import { useDropzone } from 'react-dropzone'
-import { FormattedMessage, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import { dialCodes } from '../constants'
-import axios from 'axios'
 
 const Styling = styled.div.attrs({
   className: 'form-container',
@@ -254,21 +252,6 @@ const getCategories = () => {
   return result
 }
 
-// const productsCategories = [
-//   {
-//     value: 'category_1',
-//     label: 'category_1',
-//   },
-//   {
-//     value: 'category_2',
-//     label: 'category_2',
-//   },
-//   {
-//     value: 'category_3',
-//     label: 'category_3',
-//   },
-// ]
-
 const MultiSelect = (props) => {
   const {
     name,
@@ -319,7 +302,7 @@ const TextField = ({ error, name, label, ...props }) => {
 const FileField = React.memo((props) => {
   const dispatch = useDispatch()
   const filesState = useSelector((state) => state.files)
-
+  const formState = useSelector((state) => state.form)
   const onDrop = (acceptedFiles) => {
     if (acceptedFiles.length) {
       const arrFiles = Array.from(acceptedFiles)
@@ -351,7 +334,6 @@ const FileField = React.memo((props) => {
     rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize
 
   const additionalClass = isDragAccept ? 'accept' : isDragReject ? 'reject' : ''
-  const intl = useIntl()
 
   return (
     <React.Fragment>
@@ -366,7 +348,7 @@ const FileField = React.memo((props) => {
           {filesState.files.length === 0 &&
             !isDragActive &&
             !isDragReject &&
-            intl.messages['form.files.label']}
+            formState.form.files.label}
           {isDragActive && !isDragReject && 'Drop it here'}
           {isDragReject && 'File type not accepted, sorry!'}
           {isFileTooLarge && (
@@ -404,8 +386,8 @@ export const Form = ({
   meta,
   field,
 }) => {
-  const intl = useIntl()
   const [categories, setCategories] = useState([])
+  const formState = useSelector((state) => state.form)
 
   useEffect(() => {
     const c = getCategories()
@@ -415,11 +397,7 @@ export const Form = ({
   return (
     <Styling>
       <div className="row-container">
-        <h1>
-          <FormattedMessage id="form.h1">
-            {(message) => message}
-          </FormattedMessage>
-        </h1>
+        <h1>{formState.form.h1}</h1>
       </div>
       <div className="column-container">
         <div className="row-container">
@@ -430,7 +408,7 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.firstName && errors.firstName}
-              label={intl.messages['form.firstName']}
+              label={formState.form.firstName}
               value={values.firstName}
             />
           </div>
@@ -441,7 +419,7 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.lastName && errors.lastName}
-              label={intl.messages['form.lastName']}
+              label={formState.form.lastName}
               value={values.lastName}
             />
           </div>
@@ -454,7 +432,7 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.email && errors.email}
-              label={intl.messages['form.email']}
+              label={formState.form.email}
               value={values.email}
             />
           </div>
@@ -462,7 +440,6 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-30">
             <Select
-              placeholder="true"
               id="dialCode"
               onBlur={() => setFieldTouched('dialCode', true)}
               onChange={(value) => {
@@ -472,8 +449,8 @@ export const Form = ({
               options={dialCodes}
               getOptionLabel={(option) => option.value}
               getOptionValue={(option) => option.value}
-              value={values.dialCode}
               classNamePrefix="react-select"
+              placeholder={formState.form.dialCode}
             />
             {errors.dialCode && touched.dialCode && (
               <div className="field-error">{errors.dialCode.value}</div>
@@ -486,7 +463,7 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.telephone && errors.telephone}
-              label={intl.messages['form.telephone']}
+              label={formState.form.telephone}
               value={values.telephone}
             />
           </div>
@@ -499,7 +476,7 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.businessName && errors.businessName}
-              label={intl.messages['form.businessName']}
+              label={formState.form.businessName}
               value={values.businessName}
             />
           </div>
@@ -512,7 +489,7 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.businessAddress && errors.businessAddress}
-              label={intl.messages['form.businessAddress']}
+              label={formState.form.businessAddress}
               value={values.businessAddress}
             />
           </div>
@@ -527,7 +504,7 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.postalCode && errors.postalCode}
-              label={intl.messages['form.postalCode']}
+              label={formState.form.postalCode}
               value={values.postalCode}
             />
           </div>
@@ -538,24 +515,43 @@ export const Form = ({
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.city && Boolean(errors.city)}
-              label={intl.messages['form.city']}
+              label={formState.form.city}
               value={values.city}
             />
           </div>
         </div>
         <div className="row-container">
           <div className="field-wrapper width-100">
+            <Select
+              id="country"
+              onBlur={() => setFieldTouched('country', true)}
+              onChange={(value) => {
+                return setFieldValue('country', value)
+              }}
+              name="country"
+              options={formState.countries}
+              value={values.country}
+              classNamePrefix="react-select"
+              placeholder={formState.form.country}
+              // menuIsOpen
+            />
+            {errors.country && touched.country && (
+              <div className="field-error">{errors.country.value}</div>
+            )}
+          </div>
+          <div className="field-wrapper width-50">
             <TextField
               type="text"
               name="taxNumber"
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.taxNumber && errors.taxNumber}
-              label={intl.messages['form.taxNumber']}
+              label={formState.form.taxNumber}
               value={values.taxNumber}
             />
           </div>
         </div>
+
         <div className="row-container">
           <div className="field-wrapper width-100">
             <Select
@@ -568,7 +564,7 @@ export const Form = ({
               options={businessTypes}
               value={values.businessType}
               classNamePrefix="react-select"
-              placeholder={intl.messages['form.businessType']}
+              placeholder={formState.form.businessType}
               // menuIsOpen
             />
             {errors.businessType && touched.businessType && (
@@ -596,7 +592,7 @@ export const Form = ({
               touched={touched.productCategories}
               options={categories}
               classNamePrefix="react-select"
-              placeholder={intl.messages['form.productCategories']}
+              placeholder={formState.form.productCategory}
             />
           </div>
         </div>
