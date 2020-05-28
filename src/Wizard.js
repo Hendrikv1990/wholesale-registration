@@ -33,6 +33,10 @@ const FormSchema = yup.object().shape({
     label: yup.string().required(),
     value: yup.string().required('Please choose on of the options'),
   }),
+  country: yup.object().shape({
+    label: yup.string().required(),
+    value: yup.string().required('Please choose on of the options'),
+  }),
   businessType: yup.object().shape({
     label: yup.string().required(),
     value: yup.string().required('Please choose on of the options'),
@@ -137,7 +141,9 @@ class Wizard extends Component {
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
     ]
-    return activePage.props.validate ? activePage.props.validate(values) : {}
+    return activePage.props.validate
+      ? activePage.props.validate(values, { formState: this.props.formState })
+      : {}
   }
 
   submitForm = (values) => {
@@ -203,7 +209,7 @@ class Wizard extends Component {
   }
   render() {
     const { children } = this.props
-    const { page, values } = this.state
+    const { page, values, formState } = this.state
     const activePage = React.Children.toArray(children)[page]
 
     // const isLastPage = page === React.Children.count(children) - 1
@@ -255,6 +261,7 @@ const mapStateToProps = (state, ownProps) => ({
   files: state.files.files,
   status: state.files.status,
   uploaded: state.files.uploaded,
+  formState: state.form,
 })
 
 const mapDispatchToProps = {}

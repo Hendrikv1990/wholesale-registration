@@ -87,12 +87,12 @@ export const Finish = ({
     <Styling>
       <div className="column-container">
         <div className="row-container">
-          <h1>{formState.thanks_title}</h1>
+          <h1>{formState.finish.title}</h1>
         </div>
         <div className="row-container">
           <div
             className="lead"
-            dangerouslySetInnerHTML={{ __html: formState.thanks_description }}
+            dangerouslySetInnerHTML={{ __html: formState.finish.description }}
           ></div>
         </div>
         <div className="row-container"></div>
@@ -100,16 +100,8 @@ export const Finish = ({
       <div className="column-container">
         <div className="row-container link">
           <a onClick={(e) => handleDownload(e)}>
-            <div className="width-50">{formState.wholesale_catalog.title}</div>
-            <div className="width-50 arrow">
-              <ArrowSVG />
-            </div>
-          </a>
-        </div>
-        <div className="row-container link">
-          <a href={`mailto: ${formState.wholesale_email_address.url}`}>
             <div className="width-50">
-              {formState.wholesale_email_address.title}
+              {formState.finish.wholesale_catalog.title}
             </div>
             <div className="width-50 arrow">
               <ArrowSVG />
@@ -117,16 +109,30 @@ export const Finish = ({
           </a>
         </div>
         <div className="row-container link">
-          <a href={formState.wholesale_phone.url}>
-            <div className="width-50">{formState.wholesale_phone.title}</div>
+          <a href={`mailto: ${formState.finish.wholesale_email_address.url}`}>
+            <div className="width-50">
+              {formState.finish.wholesale_email_address.title}
+            </div>
             <div className="width-50 arrow">
               <ArrowSVG />
             </div>
           </a>
         </div>
         <div className="row-container link">
-          <a href={formState.wholesale_shop.url}>
-            <div className="width-50">{formState.wholesale_shop.title}</div>
+          <a href={formState.finish.wholesale_phone.url}>
+            <div className="width-50">
+              {formState.finish.wholesale_phone.title}
+            </div>
+            <div className="width-50 arrow">
+              <ArrowSVG />
+            </div>
+          </a>
+        </div>
+        <div className="row-container link">
+          <a href={formState.finish.wholesale_shop.url}>
+            <div className="width-50">
+              {formState.finish.wholesale_shop.title}
+            </div>
             <div className="width-50 arrow">
               <ArrowSVG />
             </div>

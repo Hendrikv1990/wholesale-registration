@@ -75,23 +75,23 @@ const Styling = styled.div.attrs({
     }
   }
 `
+const Button = styled.button`
+  color: #222;
+  background: #fff;
+  border: 1px solid #222;
+  line-height: 1.3em;
+  padding: 1rem 4rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    background: #fff;
+    color: #222;
+  }
+`
 
 const SimpleButton = ({ name, className, previous }) => {
-  const Button = styled.button`
-    color: #222;
-    background: #fff;
-    border: 1px solid #222;
-    line-height: 1.3em;
-    padding: 1rem 4rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    &:hover,
-    &:focus {
-      cursor: pointer;
-      background: #fff;
-      color: #222;
-    }
-  `
   return (
     <div className={`item ${className}`}>
       <Button type="button" onClick={previous} className="button">
@@ -151,7 +151,7 @@ export const Footer = React.memo(({ page, previous, width }) => {
           {page === 1 && width > sizes.phone && (
             <SimpleButton
               className="hidden"
-              name={formState.wholesale_register_button}
+              name={formState.buttons.wholesale_register_button}
             />
           )}
           {page === 0 && (
@@ -183,24 +183,23 @@ export const Footer = React.memo(({ page, previous, width }) => {
             </div>
           )}
           {page === 2 && (
-            <SimpleButton name={formState.wholesale_back_button} />
+            <SimpleButton
+              previous={previous}
+              name={formState.buttons.wholesale_back_button}
+            />
           )}
           {page > 0 && page < 4 && <Pagination />}
           {page === 1 && (
-            <SubmitButton name={formState.wholesale_next_button} />
+            <SubmitButton name={formState.buttons.wholesale_next_button} />
           )}
           {page === 2 ? (
             status === 'FILES_UPLOADED' ? (
               <SubmitButton
                 color="green"
-                name={formState.wholesale_submit_button}
-                previous={previous}
+                name={formState.buttons.wholesale_submit_button}
               />
             ) : (
-              <SubmitButton
-                name={formState.wholesale_submit_button}
-                previous={previous}
-              />
+              <SubmitButton name={formState.buttons.wholesale_submit_button} />
             )
           ) : null}
         </Styling>

@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
 import Wizard from './Wizard'
 import Acknowledge from './Wizard/Acknowledge'
 import Finish from './Wizard/Finish'
@@ -6,24 +8,31 @@ import Form from './Wizard/Form'
 import Start from './Wizard/Start'
 
 const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
+  const dispatch = useDispatch()
+
+  const getForm = () => {
+    return axios.get(
+      'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration',
+      {},
+    )
+  }
+
+  useEffect(() => {
+    getForm()
+      .then((response) => {
+        dispatch({
+          type: 'RECEIVE_FORM',
+          form: response.data,
+        })
+      })
+      .catch((error) => {})
+  }, [dispatch])
+
   return (
     <React.Fragment>
       <Wizard
         store={store}
         initialValues={{
-          // firstName: 'Marinos',
-          // lastName: 'Zakynthinos',
-          // email: 'marinoszak@gmail.com',
-          // dialCode: {
-          //   value: '+49',
-          //   label: 'Germany',
-          // },
-          // telephone: '15168729265',
-          // businessName: 'Pardalo  katsiki',
-          // businessAddress: 'Oldenburger Str. 5',
-          // postalCode: '10551',
-          // city: 'Berlin',
-          // taxNumber: '234',
           uploaded: {},
           firstName: '',
           lastName: '',
@@ -34,6 +43,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
           businessAddress: '',
           postalCode: '',
           city: '',
+          country: '',
           taxNumber: '',
           gdpr: false,
           productCategories: [],
