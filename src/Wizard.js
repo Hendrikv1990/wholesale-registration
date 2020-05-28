@@ -68,9 +68,7 @@ const Styling = styled.div.attrs({
     position: relative;
     height: ${(props) => props.mainHeight}px;
     min-height: 700px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+
     padding: 3rem 0;
     .main-container {
       width: 100%;

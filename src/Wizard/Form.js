@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import Select from 'react-select'
 import styled from 'styled-components'
@@ -303,7 +302,7 @@ const TextField = ({ error, name, label, ...props }) => {
 const FileField = React.memo((props) => {
   const dispatch = useDispatch()
   const filesState = useSelector((state) => state.files)
-
+  const formState = useSelector((state) => state.form)
   const onDrop = (acceptedFiles) => {
     if (acceptedFiles.length) {
       const arrFiles = Array.from(acceptedFiles)
@@ -335,7 +334,6 @@ const FileField = React.memo((props) => {
     rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize
 
   const additionalClass = isDragAccept ? 'accept' : isDragReject ? 'reject' : ''
-  const intl = useIntl()
 
   return (
     <React.Fragment>
@@ -350,7 +348,7 @@ const FileField = React.memo((props) => {
           {filesState.files.length === 0 &&
             !isDragActive &&
             !isDragReject &&
-            intl.messages['form.files.label']}
+            formState.form.files.label}
           {isDragActive && !isDragReject && 'Drop it here'}
           {isDragReject && 'File type not accepted, sorry!'}
           {isFileTooLarge && (
@@ -399,7 +397,7 @@ export const Form = ({
   return (
     <Styling>
       <div className="row-container">
-        <h1>{formState.h1}</h1>
+        <h1>{formState.form.h1}</h1>
       </div>
       <div className="column-container">
         <div className="row-container">

@@ -1,7 +1,6 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import axios from 'axios'
 import React, { useEffect, useRef } from 'react'
-import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
@@ -159,11 +158,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
           <h1>{formState.acknowledge.title}</h1>
         </div>
         <div className="row-container lead-wrapper">
-          <p className="lead">
-            <FormattedMessage id="acknowledge.p">
-              {(message) => message}
-            </FormattedMessage>
-          </p>
+          <p className="lead">{formState.acknowledge.p}</p>
         </div>
         <div className="row-container gdpr-wrapper">
           <Checkbox

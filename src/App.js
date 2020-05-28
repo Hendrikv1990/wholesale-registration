@@ -1,13 +1,10 @@
 import React from 'react'
-import { IntlProvider } from 'react-intl'
-import appStrings from './appStrings'
-import { GlobalStyle } from './assets/Styles'
-import Main from './Main'
-import { flattenMessages } from './modules/flattenMessages'
 import { Provider } from 'react-redux'
 import { applyMiddleware, compose, createStore } from 'redux'
 import { logger } from 'redux-logger'
 import thunk from 'redux-thunk'
+import { GlobalStyle } from './assets/Styles'
+import Main from './Main'
 import rootReducer from './reducers'
 
 const middleware = [thunk]
@@ -26,16 +23,11 @@ export const store = createStore(
   ),
 )
 
-const App = ({ locale = 'en' }) => {
+const App = () => {
   return (
     <Provider store={store}>
-      <IntlProvider
-        locale={locale}
-        messages={flattenMessages(appStrings[locale])}
-      >
-        <GlobalStyle />
-        <Main store={store} />
-      </IntlProvider>
+      <GlobalStyle />
+      <Main store={store} />
     </Provider>
   )
 }

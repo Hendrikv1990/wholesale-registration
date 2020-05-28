@@ -1,8 +1,7 @@
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { device, sizes } from './assets/Styles'
-import { useSelector } from 'react-redux'
 import SubmitButton from './SubmitButton'
 const Styling = styled.div.attrs({
   className: 'footer-wrapper',
@@ -95,7 +94,7 @@ const SimpleButton = ({ name, className, previous }) => {
   return (
     <div className={`item ${className}`}>
       <Button type="button" onClick={previous} className="button">
-        <FormattedMessage id={name}>{(message) => message}</FormattedMessage>
+        {name}
       </Button>
     </div>
   )
