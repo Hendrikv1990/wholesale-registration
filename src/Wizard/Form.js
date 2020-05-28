@@ -449,7 +449,6 @@ export const Form = ({
               options={dialCodes}
               getOptionLabel={(option) => option.value}
               getOptionValue={(option) => option.value}
-              value={values.dialCode}
               classNamePrefix="react-select"
               placeholder={formState.form.dialCode}
             />
@@ -532,8 +531,6 @@ export const Form = ({
               name="country"
               options={formState.countries}
               value={values.country}
-              getOptionValue={(option) => Object.keys(option)[0]}
-              getOptionLabel={(option) => Object.values(option)[0]}
               classNamePrefix="react-select"
               placeholder={formState.form.country}
               // menuIsOpen
@@ -554,6 +551,7 @@ export const Form = ({
             />
           </div>
         </div>
+
         <div className="row-container">
           <div className="field-wrapper width-100">
             <Select

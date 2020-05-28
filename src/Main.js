@@ -37,7 +37,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
           firstName: '',
           lastName: '',
           email: '',
-          dialCode: {},
+          dialCode: '',
           telephone: '',
           businessName: '',
           businessAddress: '',
@@ -47,7 +47,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
           taxNumber: '',
           gdpr: false,
           productCategories: [],
-          businessType: {},
+          businessType: '',
           files: [],
         }}
       >
