@@ -19,10 +19,7 @@ const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2
 const FormSchema = yup.object().shape({
   firstName: yup.string().required('First Name is required'),
   lastName: yup.string().required('Last Name is required'),
-  email: yup
-    .string()
-    .email()
-    .required('Email is required'),
+  email: yup.string().email().required('Email is required'),
   telephone: yup
     .string()
     .matches(phoneRegExp, 'Phone number is not valid')
@@ -65,7 +62,7 @@ const Styling = styled.div.attrs({
   .main-wrapper {
     margin: auto 7rem;
     position: relative;
-    height: ${props => props.mainHeight}px;
+    height: ${(props) => props.mainHeight}px;
     min-height: 700px;
     display: flex;
     flex-direction: column;
@@ -125,25 +122,25 @@ class Wizard extends Component {
     window.removeEventListener('resize', this.onResize)
   }
 
-  next = values =>
-    this.setState(state => ({
+  next = (values) =>
+    this.setState((state) => ({
       page: Math.min(state.page + 1, this.props.children.length - 1),
       values,
     }))
 
   previous = () =>
-    this.setState(state => ({
+    this.setState((state) => ({
       page: Math.max(state.page - 1, 0),
     }))
 
-  validate = values => {
+  validate = (values) => {
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
     ]
     return activePage.props.validate ? activePage.props.validate(values) : {}
   }
 
-  submitForm = values => {
+  submitForm = (values) => {
     axios({
       method: 'post',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -151,15 +148,15 @@ class Wizard extends Component {
         'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_register/',
       data: values,
     })
-      .then(response => {
+      .then((response) => {
         this.setState({ message: 'success' })
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ message: 'failure' })
       })
   }
 
-  handleSubmit = values => {
+  handleSubmit = (values) => {
     const { files, status, uploaded } = this.props
     const { page } = this.state
     // const isLastPage = page === React.Children.count(children) - 1
@@ -168,7 +165,6 @@ class Wizard extends Component {
       if (files.length) {
         if (status === 'FILES_UPLOADED') {
           values['uploaded'] = uploaded
-          console.log(values)
           this.submitForm(values)
           this.next(values)
         } else {
@@ -176,17 +172,16 @@ class Wizard extends Component {
         }
       }
     } else {
-      console.log(values)
       this.next(values)
     }
   }
 
-  getValidationSchema = page => {
+  getValidationSchema = (page) => {
     const validationSchemas = [null, FormSchema, AcknowledgeSchema]
     return validationSchemas[page]
   }
 
-  animateOnEnter = node => {
+  animateOnEnter = (node) => {
     const timeline = new TimelineLite()
     return timeline.from(
       node,
@@ -199,7 +194,7 @@ class Wizard extends Component {
     )
   }
 
-  animateOnExit = node => {
+  animateOnExit = (node) => {
     const timeline = new TimelineLite()
     return timeline.to(node, 0.5, {
       ease: Power3.easeInOut,
@@ -220,7 +215,7 @@ class Wizard extends Component {
           enableReinitialize={false}
           validate={this.validate}
           onSubmit={this.handleSubmit}
-          render={props => (
+          render={(props) => (
             <form onSubmit={props.handleSubmit}>
               <div className="main-wrapper">
                 <TransitionGroup component={null}>
@@ -228,8 +223,8 @@ class Wizard extends Component {
                     appear
                     onEntered={this.onResize()}
                     key={this.state.page}
-                    onEnter={node => this.animateOnEnter(node)}
-                    onExit={node => this.animateOnExit(node)}
+                    onEnter={(node) => this.animateOnEnter(node)}
+                    onExit={(node) => this.animateOnExit(node)}
                     timeout={500}
                     unmountOnExit
                   >
@@ -257,9 +252,9 @@ class Wizard extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  files: state.files,
-  status: state.status,
-  uploaded: state.uploaded,
+  files: state.files.files,
+  status: state.files.status,
+  uploaded: state.files.uploaded,
 })
 
 const mapDispatchToProps = {}

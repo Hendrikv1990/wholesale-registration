@@ -1,9 +1,9 @@
-import React from 'react'
 import axios from 'axios'
-import { FormattedMessage } from 'react-intl'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { device } from '../assets/Styles'
 import { ReactComponent as ArrowSVG } from '../assets/arrow.svg'
+import { device } from '../assets/Styles'
 
 const Styling = styled.div.attrs({
   className: 'finish-container',
@@ -60,19 +60,6 @@ const Styling = styled.div.attrs({
     }
   }
 `
-const handleDownload = e => {
-  e.preventDefault()
-  // https://stackoverflow.com/questions/40707684/how-do-i-save-a-file-getting-downloaded-from-server-using-react/40708651
-  axios({
-    method: 'get',
-    url:
-      'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration/',
-  })
-    .then(response => {
-      window.open(response.data.wholesale_catalog)
-    })
-    .catch(error => {})
-}
 
 export const Finish = ({
   errors,
@@ -81,32 +68,48 @@ export const Finish = ({
   handleBlur,
   values,
 }) => {
+  const formState = useSelector((state) => state.form)
+
+  const handleDownload = (e) => {
+    e.preventDefault()
+    // https://stackoverflow.com/questions/40707684/how-do-i-save-a-file-getting-downloaded-from-server-using-react/40708651
+    axios({
+      method: 'get',
+      url: formState.wholesale_catalog.url,
+    })
+      .then((response) => {
+        window.open(response.data.wholesale_catalog)
+      })
+      .catch((error) => {})
+  }
+
   return (
     <Styling>
       <div className="column-container">
         <div className="row-container">
-          <h1>
-            <FormattedMessage id="finish.h1">
-              {message => message}
-            </FormattedMessage>
-          </h1>
+          <h1>{formState.thanks_title}</h1>
         </div>
         <div className="row-container">
-          <p className="lead">
-            <FormattedMessage id="finish.p">
-              {message => message}
-            </FormattedMessage>
-          </p>
+          <div
+            className="lead"
+            dangerouslySetInnerHTML={{ __html: formState.thanks_description }}
+          ></div>
         </div>
         <div className="row-container"></div>
       </div>
       <div className="column-container">
         <div className="row-container link">
-          <a onClick={e => handleDownload(e)}>
+          <a onClick={(e) => handleDownload(e)}>
+            <div className="width-50">{formState.wholesale_catalog.title}</div>
+            <div className="width-50 arrow">
+              <ArrowSVG />
+            </div>
+          </a>
+        </div>
+        <div className="row-container link">
+          <a href={`mailto: ${formState.wholesale_email_address.url}`}>
             <div className="width-50">
-              <FormattedMessage id="finish.download">
-                {message => message}
-              </FormattedMessage>
+              {formState.wholesale_email_address.title}
             </div>
             <div className="width-50 arrow">
               <ArrowSVG />
@@ -114,36 +117,16 @@ export const Finish = ({
           </a>
         </div>
         <div className="row-container link">
-          <a href="email">
-            <div className="width-50">
-              <FormattedMessage id="finish.email">
-                {message => message}
-              </FormattedMessage>
-            </div>
+          <a href={formState.wholesale_phone.url}>
+            <div className="width-50">{formState.wholesale_phone.title}</div>
             <div className="width-50 arrow">
               <ArrowSVG />
             </div>
           </a>
         </div>
         <div className="row-container link">
-          <a href="call">
-            <div className="width-50">
-              <FormattedMessage id="finish.call">
-                {message => message}
-              </FormattedMessage>
-            </div>
-            <div className="width-50 arrow">
-              <ArrowSVG />
-            </div>
-          </a>
-        </div>
-        <div className="row-container link">
-          <a href="shop">
-            <div className="width-50">
-              <FormattedMessage id="finish.shop">
-                {message => message}
-              </FormattedMessage>
-            </div>
+          <a href={formState.wholesale_shop.url}>
+            <div className="width-50">{formState.wholesale_shop.title}</div>
             <div className="width-50 arrow">
               <ArrowSVG />
             </div>

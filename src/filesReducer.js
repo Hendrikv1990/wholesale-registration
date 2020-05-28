@@ -15,8 +15,6 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-  console.log(action)
-
   switch (action.type) {
     case 'load':
       return { ...state, files: action.files, status: LOADED }

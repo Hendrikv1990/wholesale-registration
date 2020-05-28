@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { applyMiddleware, compose, createStore } from 'redux'
 import { logger } from 'redux-logger'
 import thunk from 'redux-thunk'
-import rootReducer from './filesReducer'
+import rootReducer from './reducers'
 
 const middleware = [thunk]
 

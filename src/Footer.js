@@ -3,14 +3,26 @@ import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { device, sizes } from './assets/Styles'
 import { useSelector } from 'react-redux'
-
+import SubmitButton from './SubmitButton'
 const Styling = styled.div.attrs({
   className: 'footer-wrapper',
 })`
-  .footer-container {
+  .links {
+    display: flex;
+    flex-direction: column;
+    font-family: ArchivoNarrow;
+    font-size: 14px;
+    color: #55706c;
+    span {
+      a {
+        color: #068273;
+      }
+    }
   }
+
   .hidden {
     visibility: hidden;
+    display: none;
   }
   width: 100%;
   display: flex;
@@ -64,8 +76,35 @@ const Styling = styled.div.attrs({
   }
 `
 
+const SimpleButton = ({ name, className, previous }) => {
+  const Button = styled.button`
+    color: #222;
+    background: #fff;
+    border: 1px solid #222;
+    line-height: 1.3em;
+    padding: 1rem 4rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      background: #fff;
+      color: #222;
+    }
+  `
+  return (
+    <div className={`item ${className}`}>
+      <Button type="button" onClick={previous} className="button">
+        <FormattedMessage id={name}>{(message) => message}</FormattedMessage>
+      </Button>
+    </div>
+  )
+}
+
 export const Footer = React.memo(({ page, previous, width }) => {
-  const status = useSelector(state => state.status)
+  const status = useSelector((state) => state.files.status)
+  const formState = useSelector((state) => state.form)
+
   const Pagination = () => {
     return (
       <div className="item pagination">
@@ -73,7 +112,7 @@ export const Footer = React.memo(({ page, previous, width }) => {
           <div className="pagination-container">
             <nav>
               <ul>
-                {[1, 2, 3].map(x => {
+                {[1, 2, 3].map((x) => {
                   let active = x === page ? 'active' : ''
                   return (
                     <li key={x} className={`${active}`}>
@@ -89,60 +128,6 @@ export const Footer = React.memo(({ page, previous, width }) => {
     )
   }
 
-  const SubmitButton = ({ name, color }) => {
-    console.log(color)
-
-    const Button = styled.button`
-      color: ${props => (props.color === 'green' ? '#fff' : '#222')};
-      background: ${props => (props.color === 'green' ? '#058273' : '#fff')};
-      border: ${props =>
-        props.color === 'green' ? 'none' : '1px solid #222;'};
-      line-height: 1.3em;
-      padding: 1rem 4rem;
-      text-transform: uppercase;
-      font-weight: bold;
-      &:hover,
-      &:focus {
-        cursor: pointer;
-        background: ${props => (props.color === 'green' ? '#058273' : '#fff')};
-        color: ${props => (props.color === 'green' ? '#fff' : '#222')};
-      }
-    `
-
-    return (
-      <div className="item">
-        <Button color={color} type="submit" className="button">
-          <FormattedMessage id={name}>{message => message}</FormattedMessage>
-        </Button>
-      </div>
-    )
-  }
-
-  const SimpleButton = ({ name, className }) => {
-    const Button = styled.button`
-      color: #222;
-      background: #fff;
-      border: 1px solid #222;
-      line-height: 1.3em;
-      padding: 1rem 4rem;
-      text-transform: uppercase;
-      font-weight: bold;
-      &:hover,
-      &:focus {
-        cursor: pointer;
-        background: #fff;
-        color: #222;
-      }
-    `
-    return (
-      <div className={`item ${className}`}>
-        <Button type="button" onClick={previous} className="button">
-          <FormattedMessage id={name}>{message => message}</FormattedMessage>
-        </Button>
-      </div>
-    )
-  }
-
   const buttonName = () => {
     switch (status) {
       case 'FILES_UPLOADED':
@@ -150,7 +135,7 @@ export const Footer = React.memo(({ page, previous, width }) => {
       case 'idle':
         return 'button.form.submit'
       case 'LOADED':
-        return 'button.form.upload'
+        return 'button.form.submit'
       case 'PENDING':
         return 'button.form.uploading'
       default:
@@ -159,23 +144,68 @@ export const Footer = React.memo(({ page, previous, width }) => {
   }
 
   return (
-    <Styling>
-      {/* We show this hidden component on Desktop and Tablet only */}
-      {page === 1 && width > sizes.phone && (
-        <SimpleButton className="hidden" name="button.start" />
+    <React.Fragment>
+      {formState && (
+        <Styling>
+          {/* We show this hidden component on Desktop and Tablet only */}
+          {page === 1 && width > sizes.phone && (
+            <SimpleButton
+              className="hidden"
+              name={formState.wholesale_register_button}
+            />
+          )}
+          {page === 0 && (
+            <React.Fragment>
+              <div className="links">
+                <span>
+                  {formState.login_message}
+                  <a href={formState.login_link.url}>
+                    {formState.login_link.title}
+                  </a>
+                </span>
+              </div>
+            </React.Fragment>
+          )}
+          {page === 1 && (
+            <div className="links">
+              <span>
+                {formState.login_message}
+                <a href={formState.login_link.url}>
+                  {formState.login_link.title}
+                </a>
+              </span>
+              <span>
+                {formState.help_message}
+                <a href={formState.help_link.url}>
+                  {formState.help_link.title}
+                </a>
+              </span>
+            </div>
+          )}
+          {page === 2 && (
+            <SimpleButton name={formState.wholesale_back_button} />
+          )}
+          {page > 0 && page < 4 && <Pagination />}
+          {page === 1 && (
+            <SubmitButton name={formState.wholesale_next_button} />
+          )}
+          {page === 2 ? (
+            status === 'FILES_UPLOADED' ? (
+              <SubmitButton
+                color="green"
+                name={formState.wholesale_submit_button}
+                previous={previous}
+              />
+            ) : (
+              <SubmitButton
+                name={formState.wholesale_submit_button}
+                previous={previous}
+              />
+            )
+          ) : null}
+        </Styling>
       )}
-      {page === 0 && <SubmitButton name="button.start" />}
-      {page === 2 && <SimpleButton name="button.back" />}
-      {page > 0 && page < 4 && <Pagination />}
-      {page === 1 && <SubmitButton name="button.next" />}
-      {page === 2 ? (
-        status === 'FILES_UPLOADED' ? (
-          <SubmitButton color="green" name={buttonName()} />
-        ) : (
-          <SubmitButton name={buttonName()} />
-        )
-      ) : null}
-    </Styling>
+    </React.Fragment>
   )
 })
 export default Footer
