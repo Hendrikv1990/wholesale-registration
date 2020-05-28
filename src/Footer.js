@@ -10,7 +10,7 @@ const Styling = styled.div.attrs({
   .links {
     display: flex;
     flex-direction: column;
-    font-family: ArchivoNarrow;
+    font-family: Archivo Narrow;
     font-size: 14px;
     color: #55706c;
     span {
