@@ -10,8 +10,11 @@ const Styling = styled.div.attrs({
   @media ${device.phone} {
     display: block;
   }
+  
+  
+  
   .hero-container {
-    flex: 0 1 50%;
+    flex: 0 1 40%;
 
     span {
       font-family: Bebas Neue Pro;
@@ -21,10 +24,15 @@ const Styling = styled.div.attrs({
       font-style: normal;
       line-height: 0.9;
       text-transform: capitalize;
+      color:#00140f;
     }
   }
   .image-wrapper {
-    flex: 0 1 50%;
+    flex: 0 1 60%;
+    @media only screen and (max-width:1024px){
+        width: 100%;
+        margin: 0;
+    }
   }
 `
 

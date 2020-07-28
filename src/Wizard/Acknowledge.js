@@ -47,6 +47,18 @@ const Styling = styled.div.attrs({
       flex: 0 1 100%;
     }
   }
+  .column-space {
+  margin:0;
+    @media only screen and (min-width:1024px){
+      padding-left:20%;
+    }
+  }
+  .footer-wrapper {
+   @media ${device.tablet} {
+      margin-left: auto;
+    margin-right: auto;
+    }
+  }
   .field-wrapper {
     margin: 1rem;
   }
@@ -58,6 +70,23 @@ const Styling = styled.div.attrs({
   }
   .width-auto {
     flex: 0 1 auto;
+  }
+  .width-40 {
+   flex: 0 1 40%;
+   margin:0;
+    @media ${device.tablet} {
+      flex: 0 1 100%;
+    }
+  }
+   .width-60 {
+   flex: 0 1 60%;
+   margin:0;
+   }
+  .no-padding {
+  padding:0;
+  @media ${device.tablet} {
+      padding:0;
+    }
   }
 
   .container {
@@ -87,7 +116,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
         method: 'post',
         headers: { 'Content-Type': 'multipart/form-data' },
         url:
-          'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/file_upload',
+          '/wp-json/tomhemps/v1/file_upload',
         data: formData,
       })
     },
@@ -153,9 +182,10 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
   }, [pending.length, uploading, dispatch])
   return (
     <Styling>
-      <div className="column-container">
+      <div className="container mt-5 pt-3 no-padding d-flex">
+      <div className="column-container width-40">
         <div className="row-container">
-          <h1>{formState.acknowledge.title}</h1>
+          <h2>{formState.acknowledge.title}</h2>
         </div>
         <div className="row-container lead-wrapper">
           <p className="lead">{formState.acknowledge.p}</p>
@@ -169,7 +199,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
             onBlur={handleBlur}
           />
           <a
-            href="https://www.google.gr"
+            href="https://www.tomhemps.com/datenschutz/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -180,7 +210,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
           )}
         </div>
       </div>
-      <div className="column-container">
+      <div className="width-60 column-space">
         <div className="row-container">
           <div className="width-50">{formState.form.firstName}</div>
           <div className="width-50">{values.firstName}</div>
@@ -236,7 +266,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
               filesState.files.map(({ file, src, id }, index) => (
                 <div
                   style={{
-                    color: filesState.uploaded[id] ? '#058273' : '##55706c',
+                    color: filesState.uploaded[id] ? '#058273' : '#55706c',
                   }}
                   key={`file-${index}`}
                   className="file-wrapper"
@@ -247,6 +277,7 @@ const Acknowledge = ({ errors, touched, handleChange, handleBlur, values }) => {
           </div>
         </div>
       </div>
+        </div>
     </Styling>
   )
 }

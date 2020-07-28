@@ -13,19 +13,34 @@ const Styling = styled.div.attrs({
   .file {
     margin: 0 1px;
     .dropzone {
+    padding-left:0;
       font-size: 14px;
       color: #55706c;
       padding: 0.5rem;
-      border: 1px solid #00140f;
-
-      background-color: #fafafa;
+      border-bottom: 1px solid #00140f;
+      position: relative;
+      background-color: #fcfbf7;
       cursor: pointer;
       transition: border 500ms ease-in-out;
       &:hover {
-        border: 1px solid #058273;
+       
       }
       &:focus {
         outline: 0;
+      }
+      &:after {
+        position: absolute;
+        right:0;
+        content:"";
+        top:5px;
+        @media only screen and (max-width:1023px){
+          top:7px;
+        }
+        background-image:url("../wp-content/themes/tomhemps/src/icons/Plus_Green.svg");
+        background-repeat:no-repeat;
+        background-size:12px;
+        width:12px;
+        height:12px;
       }
     }
     .files {
@@ -65,12 +80,13 @@ const Styling = styled.div.attrs({
   .react-select__control {
     border-style: none;
     border-radius: 0;
-    border-bottom: 1px solid #00140f;
+    border-bottom:1px solid #00140f;
     box-shadow: none;
     transition: border 500ms ease-in-out;
-    background: transparent;
+    background: #fcfbf7;
     .react-select__value-container {
       padding: 0;
+      
     }
     .react-select__indicators {
       span {
@@ -80,12 +96,12 @@ const Styling = styled.div.attrs({
     &:hover {
       cursor: pointer;
       border: none;
-      padding-bottom: 0;
+      padding-bottom: 5px;
       border-bottom: 1px solid #058273;
     }
 
     .react-select__multi-value {
-      background-color: #fff;
+      background-color: #fcfbf7;
       display: flex;
       align-items: center;
       .react-select__multi-value__label {
@@ -106,12 +122,18 @@ const Styling = styled.div.attrs({
       }
     }
   }
+  .form-title {
+  margin:0 1rem;
+  @media ${device.tablet} {
+    margin:0;
+  }
+  }
   .react-select__menu {
     border-radius: 0;
     box-shadow: none;
     margin-top: 0;
-    background-color: #fff;
-    border-bottom: 1px solid #058273;
+    background-color: #fcfbf7;
+    border:1px solid #00140f;
     .react-select__menu-list {
       padding-bottom: 0;
       padding-top: 0;
@@ -122,11 +144,11 @@ const Styling = styled.div.attrs({
       .react-select__option--is-focused {
         cursor: pointer;
         background-color: inherit;
-        color: #222;
+        color: #00140f;
       }
       .react-select__option--is-selected {
         background-color: inherit;
-        color: #222;
+        color: #00140f;
       }
     }
   }
@@ -142,9 +164,8 @@ const Styling = styled.div.attrs({
     }
   }
   .field-wrapper {
-    margin: 1rem;
-
-    margin-bottom: 45px;
+   
+    margin-bottom: 30px;
     position: relative;
     input {
       width: 100%;
@@ -167,6 +188,23 @@ const Styling = styled.div.attrs({
       position: absolute;
       color: #ff5151;
       font-size: 14px;
+    }
+    .width-100 {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .width-50 {
+        &:first-child {
+          margin-left:0;
+        }
+       &.last-col {
+        margin-right:0;
+        
+       }
+       
+    @media ${device.tablet} {
+          margin:0;
+        }
     }
   }
 
@@ -196,6 +234,8 @@ const Styling = styled.div.attrs({
       letter-spacing: normal;
     }
   }
+  
+ 
 `
 
 const businessTypes = [
@@ -231,13 +271,17 @@ const businessTypes = [
     value: 'AG',
     label: 'AG',
   },
+{
+    value: 'Other',
+    label: 'other',
+},
 ]
 
 const getCategories = () => {
   let result = []
   axios
     .get(
-      'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration',
+      '/wp-json/tomhemps/v1/wholesale_registration',
       {},
     )
     .then((response) => {
@@ -396,7 +440,7 @@ export const Form = ({
 
   return (
     <Styling>
-      <div className="row-container">
+      <div className="row-container form-title">
         <h1>{formState.form.h1}</h1>
       </div>
       <div className="column-container">
@@ -412,7 +456,7 @@ export const Form = ({
               value={values.firstName}
             />
           </div>
-          <div className="field-wrapper width-100">
+          <div className="field-wrapper width-50 last-col">
             <TextField
               name="lastName"
               type="text"
@@ -508,7 +552,7 @@ export const Form = ({
               value={values.postalCode}
             />
           </div>
-          <div className="field-wrapper width-50">
+          <div className="field-wrapper width-50 last-col">
             <TextField
               fullWidth
               name="city"
@@ -539,7 +583,7 @@ export const Form = ({
               <div className="field-error">{errors.country.value}</div>
             )}
           </div>
-          <div className="field-wrapper width-50">
+          <div className="field-wrapper width-50 last-col">
             <TextField
               type="text"
               name="taxNumber"
@@ -571,6 +615,18 @@ export const Form = ({
               <div className="field-error">{errors.businessType.value}</div>
             )}
           </div>
+
+            <div className="field-wrapper width-50 last-col">
+                <TextField
+            type="text"
+            name="vatNumber"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={touched.vatNumber && errors.vatNumber}
+            label={formState.form.vatNumber}
+            value={values.vatNumber}
+            />
+            </div>
         </div>
         <div className="row-container">
           <div className="field-wrapper width-100">

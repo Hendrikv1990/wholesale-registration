@@ -12,7 +12,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
 
   const getForm = () => {
     return axios.get(
-      'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_registration',
+      '/wp-json/tomhemps/v1/wholesale_registration',
       {},
     )
   }
@@ -45,6 +45,7 @@ const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
           city: '',
           country: '',
           taxNumber: '',
+          vatNumber: '',
           gdpr: false,
           productCategories: [],
           businessType: '',

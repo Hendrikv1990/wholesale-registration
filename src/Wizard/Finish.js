@@ -13,42 +13,16 @@ const Styling = styled.div.attrs({
   flex-wrap: wrap;
   .row-container {
     display: flex;
-  }
-  .link {
-    border-bottom: 1px solid #00140f;
-    padding: 1rem 0;
-    a {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      width: 100%;
+    
+    &.link {
+     font-size: 20px;
+    font-weight: bold;
+    color: rgb(0, 20, 15);
+    font-family: "bebas_neue_probold";
     }
   }
-  .arrow {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .column-container {
-    flex: 0 1 50%;
-    padding: 0 3rem;
-    @media ${device.tablet} {
-      flex: 0 1 100%;
-    }
-  }
-  .field-wrapper {
-    margin: 1rem;
-  }
-  .width-50 {
-    flex: 0 1 50%;
-  }
-  .width-100 {
-    flex: 0 1 100%;
-  }
-  .width-auto {
-    flex: 0 1 auto;
-  }
-
+ 
+   
   .container {
     span {
       font-size: 20px;
@@ -85,9 +59,10 @@ export const Finish = ({
 
   return (
     <Styling>
-      <div className="column-container">
+      <div className="container no-padding d-flex">
+      <div className="column-container width-40">
         <div className="row-container">
-          <h1>{formState.finish.title}</h1>
+          <h2>{formState.finish.title}</h2>
         </div>
         <div className="row-container">
           <div
@@ -97,10 +72,10 @@ export const Finish = ({
         </div>
         <div className="row-container"></div>
       </div>
-      <div className="column-container">
+      <div className="width-60 column-space">
         <div className="row-container link">
           <a onClick={(e) => handleDownload(e)}>
-            <div className="width-50">
+            <div className="width-100">
               {formState.finish.wholesale_catalog.title}
             </div>
             <div className="width-50 arrow">
@@ -110,7 +85,7 @@ export const Finish = ({
         </div>
         <div className="row-container link">
           <a href={`mailto: ${formState.finish.wholesale_email_address.url}`}>
-            <div className="width-50">
+            <div className="width-100">
               {formState.finish.wholesale_email_address.title}
             </div>
             <div className="width-50 arrow">
@@ -120,7 +95,7 @@ export const Finish = ({
         </div>
         <div className="row-container link">
           <a href={formState.finish.wholesale_phone.url}>
-            <div className="width-50">
+            <div className="width-100">
               {formState.finish.wholesale_phone.title}
             </div>
             <div className="width-50 arrow">
@@ -130,7 +105,7 @@ export const Finish = ({
         </div>
         <div className="row-container link">
           <a href={formState.finish.wholesale_shop.url}>
-            <div className="width-50">
+            <div className="width-100">
               {formState.finish.wholesale_shop.title}
             </div>
             <div className="width-50 arrow">
@@ -139,6 +114,7 @@ export const Finish = ({
           </a>
         </div>
       </div>
+        </div>
     </Styling>
   )
 }

@@ -28,11 +28,8 @@ const FormSchema = yup.object().shape({
   businessAddress: yup.string().required('Business Address is required'),
   postalCode: yup.string().required('Postal Code is required'),
   city: yup.string().required('City is required'),
-  taxNumber: yup.string().required('Tax number is required'),
-  dialCode: yup.object().shape({
-    label: yup.string().required(),
-    value: yup.string().required('Please choose on of the options'),
-  }),
+  taxNumber: yup.string().required('Required'),
+  vatNumber: yup.string(),
   country: yup.object().shape({
     label: yup.string().required(),
     value: yup.string().required('Please choose on of the options'),
@@ -41,8 +38,6 @@ const FormSchema = yup.object().shape({
     label: yup.string().required(),
     value: yup.string().required('Please choose on of the options'),
   }),
-  files: yup.array().min(1, 'Please upload a file'),
-
   productCategories: yup
 
     .array()
@@ -64,18 +59,26 @@ const Styling = styled.div.attrs({
   className: 'wrapper',
 })`
   .main-wrapper {
-    margin: auto 7rem;
+    margin: 0;
     position: relative;
-    height: ${(props) => props.mainHeight}px;
-    min-height: 700px;
-
-    padding: 3rem 0;
+    min-height: auto;
     .main-container {
       width: 100%;
-      position: absolute;
+      position: relative;
     }
     @media ${device.tablet} {
-      margin: auto 1rem;
+      margin: 0;
+      .form-title {
+        margin:0 1rem;
+      }
+      .footer-wrapper {
+      margin:0;
+      }
+    }
+  }
+  @media ${device.tablet}{
+    .image-wrapper {
+    margin: 0 -3rem;
     }
   }
   .footer-wrapper {
@@ -145,11 +148,14 @@ class Wizard extends Component {
   }
 
   submitForm = (values) => {
+
+    const whs_global = window.whs_global
+
     axios({
       method: 'post',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'X-WP-Nonce': whs_global.nonce },
       url:
-        'https://tomhemps.hkvlaanderen.com/wp-json/tomhemps/v1/wholesale_register/',
+        '/wp-json/tomhemps/v1/wholesale_register/',
       data: values,
     })
       .then((response) => {
@@ -186,6 +192,10 @@ class Wizard extends Component {
   }
 
   animateOnEnter = (node) => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
     const timeline = new TimelineLite()
     return timeline.from(
       node,
@@ -212,7 +222,7 @@ class Wizard extends Component {
 
     // const isLastPage = page === React.Children.count(children) - 1
     return (
-      <Styling mainHeight={this.state.dimensions.height}>
+      <Styling>
         <Formik
           initialValues={values}
           validationSchema={this.getValidationSchema(this.state.page)}

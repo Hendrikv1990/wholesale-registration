@@ -28,7 +28,7 @@ const Styling = styled.div.attrs({
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  .pagination {
+  .pagination-wholesale {
     margin: 0 auto;
   }
   .item {
@@ -75,18 +75,18 @@ const Styling = styled.div.attrs({
   }
 `
 const Button = styled.button`
-  color: #222;
-  background: #fff;
-  border: 1px solid #222;
+  color: #00140f;
+  background: transparent;
+  border: 1px solid #00140f;
   line-height: 1.3em;
-  padding: 1rem 4rem;
+  padding: 0;
   text-transform: uppercase;
   font-weight: bold;
   &:hover,
   &:focus {
     cursor: pointer;
-    background: #fff;
-    color: #222;
+    background: transparent;
+    color: #00140f;
   }
 `
 
@@ -106,7 +106,7 @@ export const Footer = React.memo(({ page, previous, width }) => {
 
   const Pagination = () => {
     return (
-      <div className="item pagination">
+      <div className="item pagination-wholesale">
         <div className="pagination-wrapper">
           <div className="pagination-container">
             <nav>
