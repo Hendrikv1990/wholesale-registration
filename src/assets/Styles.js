@@ -44,7 +44,7 @@ input:-webkit-autofill {
   h1 {
     font-family: 'Bebas Neue Pro';
     text-transform: uppercase;
-    font-size: 96px;
+    font-size: 60px;
     line-height: 0.9;
     color: #00140f;
     margin: 0 0 1rem;
@@ -71,6 +71,14 @@ input:-webkit-autofill {
       text-decoration: none;
       font-size: 14px;
     }
+    
+    
+    @media only screen and (max-width:1024px){
+    .links {
+      order:1;
+      margin-top:20px;
+    }
+  }
     label[for="productCategories"]{
     display:none;
     }
@@ -177,6 +185,9 @@ input:-webkit-autofill {
       flex-flow: column;
       }
   }
+  
+  
+  
   .link {
     border-bottom: 1px solid #00140f;
     padding: 1rem 0;
@@ -231,6 +242,14 @@ input:-webkit-autofill {
    }
   .no-padding {
   padding:0;
+  }
+  
+  .finish-container {
+  margin-top: 5rem;
+    margin-bottom: 8rem;
+     @media ${device.tablet} {
+      padding:0 20px;
+    }
   }
   
 `

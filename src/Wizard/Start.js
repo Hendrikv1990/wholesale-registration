@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { device } from '../assets/Styles'
 import SubmitButton from '../SubmitButton'
+import RegisterButton from '../RegisterButton'
 const Styling = styled.div.attrs({
   className: 'start-container',
 })`
@@ -47,7 +48,7 @@ export const Start = (props) => {
             <span>{formState.start.wholesale_subtitle}</span>
             <h1>{formState.start.wholesale_title}</h1>
             <p className="lead">{formState.start.wholesale_description}</p>
-            <SubmitButton name={formState.buttons.wholesale_register_button} />
+            <RegisterButton name={formState.buttons.wholesale_register_button} />
           </div>
           <div className="image-wrapper">
             <img src={formState.start.wholesale_image}></img>

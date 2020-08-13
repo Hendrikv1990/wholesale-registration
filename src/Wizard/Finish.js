@@ -11,10 +11,27 @@ const Styling = styled.div.attrs({
   display: flex;
   width: 100%;
   flex-wrap: wrap;
+  
+  
   .row-container {
     display: flex;
     
+    .lead {
+    font-family:"Archivo Narrow", sans-serif;
+    font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #55706c;
+    }
     &.link {
+    padding-bottom:0;
+    }
+    &.link div {
+        padding-bottom: 10px;
+    line-height: 1;
      font-size: 20px;
     font-weight: bold;
     color: rgb(0, 20, 15);

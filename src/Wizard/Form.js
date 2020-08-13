@@ -210,6 +210,9 @@ const Styling = styled.div.attrs({
 
   .width-50 {
     flex: 0 1 50%;
+    @media ${device.tablet}{
+    flex: 0 1 100%;
+    }
   }
   .width-100 {
     flex: 0 1 100%;
@@ -599,6 +602,8 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-100">
             <Select
+                isSearchable={false}
+              captureMenuScroll={false}
               id="businessType"
               onBlur={() => setFieldTouched('businessType', true)}
               onChange={(value) => {

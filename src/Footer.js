@@ -58,6 +58,9 @@ const Styling = styled.div.attrs({
           }
           li {
             height: 32px;
+            @media ${device.phone}{
+                margin: 0 10px;
+            }
             margin: 0 3px;
             padding: 0 10px;
             line-height: 2rem;

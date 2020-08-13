@@ -180,6 +180,8 @@ class Wizard extends Component {
         } else {
           this.props.store.dispatch({ type: 'submit' })
         }
+      } else {
+        this.next(values)
       }
     } else {
       this.next(values)
