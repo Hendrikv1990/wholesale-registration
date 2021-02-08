@@ -153,7 +153,7 @@ class Wizard extends Component {
 
     axios({
       method: 'post',
-      headers: { 'X-WP-Nonce': whs_global.nonce },
+      headers: { 'X-WP-Nounce': whs_global.nonce },
       url:
         '/wp-json/tomhemps/v1/wholesale_register/',
       data: values,
@@ -181,6 +181,7 @@ class Wizard extends Component {
           this.props.store.dispatch({ type: 'submit' })
         }
       } else {
+        this.submitForm(values)
         this.next(values)
       }
     } else {

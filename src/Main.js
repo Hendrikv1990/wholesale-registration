@@ -8,12 +8,18 @@ import Form from './Wizard/Form'
 import Start from './Wizard/Start'
 
 const Main = ({ campaign, source, medium, targetGroup, postType, store }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const language = window.wpml_browser_redirect_params.pageLanguage;
 
   const getForm = () => {
+
     return axios.get(
       '/wp-json/tomhemps/v1/wholesale_registration',
-      {},
+      {
+          params: {
+            lang: language
+        }
+        },
     )
   }
 

@@ -91,7 +91,7 @@ export const Finish = ({
       </div>
       <div className="width-60 column-space">
         <div className="row-container link">
-          <a onClick={(e) => handleDownload(e)}>
+          <a href={formState.finish.wholesale_catalog.url} target="_blank">
             <div className="width-100">
               {formState.finish.wholesale_catalog.title}
             </div>

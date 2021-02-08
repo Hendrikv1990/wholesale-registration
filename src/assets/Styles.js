@@ -86,9 +86,17 @@ input:-webkit-autofill {
     color:#55706c!important;
     }
     
-    .react-select__control {
-        padding-bottom: 5px;
+    #businessType {
+     .react-select__control {
+        padding-bottom: 0;
         }
+    }
+    .file {
+    .dropzone {
+    padding-left:0;
+    }
+    }
+   
     .start-container {
     @media only screen and (min-width:1024px){
 
@@ -250,6 +258,14 @@ input:-webkit-autofill {
      @media ${device.tablet} {
       padding:0 20px;
     }
+  }
+  .react-select__indicators {
+  .react-select__dropdown-indicator {
+     padding-right:0;
+     path {
+      fill:#00140f;
+     }
+  }
   }
   
 `

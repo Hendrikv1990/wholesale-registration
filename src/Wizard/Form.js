@@ -170,7 +170,7 @@ const Styling = styled.div.attrs({
     input {
       width: 100%;
       font-size: 14px;
-      padding: 10px 10px 10px 5px;
+      padding: 10px 10px 10px 0;
       display: block;
       border: none;
       border-bottom: 1px solid #00140f;
@@ -237,6 +237,8 @@ const Styling = styled.div.attrs({
       letter-spacing: normal;
     }
   }
+  
+
   
  
 `
@@ -645,6 +647,8 @@ export const Form = ({
         <div className="row-container">
           <div className="field-wrapper width-100">
             <MultiSelect
+    isSearchable={false}
+    captureMenuScroll={false}
               name="productCategories"
               value={values.productCategories}
               onChange={setFieldValue}
